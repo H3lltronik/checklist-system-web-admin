@@ -91,7 +91,7 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
                 >
                   <ApiSelect<Role[], Role>
                     queryKey={[ROLE_LIST_QUERY_KEY]}
-                    endpoint="http://localhost:3002/role"
+                    endpoint="/api/role"
                     itemExtractor={(data) => data}
                     keyExtractor={(item) => item.id}
                     labelExtractor={(item) => item.name}

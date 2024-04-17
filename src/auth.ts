@@ -31,7 +31,7 @@ export const checkToken = async (params?: CheckTokenParams): Promise<CheckTokenR
       wasStored: false,
     };
 
-  const res = await fetch("http://localhost:3002/auth/check-token", {
+  const res = await fetch("/api/auth/check-token", {
     headers: {
       Authorization: `Bearer ${storedToken}`,
     },
@@ -58,7 +58,7 @@ export const login = async (
   email: string,
   password: string,
 ): Promise<{ access_token: string } | null> => {
-  const res = await fetch("http://localhost:3002/auth/login", {
+  const res = await fetch("/api/auth/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

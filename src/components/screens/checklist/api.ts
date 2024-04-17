@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
 
 export const getChecklistList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/file-checklist";
+  const url = "/api/file-checklist";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -15,7 +15,7 @@ export const getChecklistList = async () => {
 
 export const getChecklistDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/file-checklist/${id}`;
+  const url = `/api/file-checklist/${id}`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -27,7 +27,7 @@ export const getChecklistDetails = async (id: number) => {
 
 export const createChecklist = async (data: FileChecklistPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/file-checklist";
+  const url = "/api/file-checklist";
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -41,7 +41,7 @@ export const createChecklist = async (data: FileChecklistPayload) => {
 
 export const updateChecklist = async (id: number, data: EditFileChecklistPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/file-checklist/${id}`;
+  const url = `/api/file-checklist/${id}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -55,7 +55,7 @@ export const updateChecklist = async (id: number, data: EditFileChecklistPayload
 
 export const deleteChecklist = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/file-checklist/${id}`;
+  const url = `/api/file-checklist/${id}`;
   const res = await fetch(url, {
     method: "DELETE",
     headers: {

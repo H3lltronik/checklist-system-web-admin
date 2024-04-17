@@ -33,7 +33,7 @@ export const AvatarChanger = (props: AvatarChangerProps) => {
       fileUploadRequestWithToken({
         file,
         method: "PATCH",
-        url: `http://localhost:3002/user/${props.userId}/picture-update`,
+        url: `/api/user/${props.userId}/picture-update`,
         onSuccess: () => {
           message.success("Imagen subida correctamente");
           queryClient.invalidateQueries({

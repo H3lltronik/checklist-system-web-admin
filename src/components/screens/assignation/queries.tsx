@@ -34,7 +34,7 @@ export const buildAssignationDetailsQueryOptions = (id: number) =>
           ...file,
           uploadedFile: {
             ...file.uploadedFile,
-            url: `http://localhost:3002/files/${file.uploadedFile.slug}`,
+            url: `/api/files/${file.uploadedFile.slug}`,
           },
         })),
       };

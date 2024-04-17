@@ -80,7 +80,7 @@ export const UploadSection = (props: UploadSectionProps) => {
           <>
             <Upload
               className="w-full mx-auto"
-              action="http://localhost:3002/files/upload"
+              action="/api/files/upload"
               listType="picture"
               maxCount={(props.item.maxFiles ?? 1) - (props.item.uploadedFiles?.length ?? 0) ?? 1}
               onChange={handleFileChange}

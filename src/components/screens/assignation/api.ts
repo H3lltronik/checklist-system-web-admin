@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
 
 export const getAssignationList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/assignation";
+  const url = "/api/assignation";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -15,7 +15,7 @@ export const getAssignationList = async () => {
 
 export const getAssignationDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/assignation/${id}`;
+  const url = `/api/assignation/${id}`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -27,7 +27,7 @@ export const getAssignationDetails = async (id: number) => {
 
 export const createAssignation = async (data: AssignationPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/assignation";
+  const url = "/api/assignation";
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -41,7 +41,7 @@ export const createAssignation = async (data: AssignationPayload) => {
 
 export const updateAssignation = async (id: number, data: EditAssignationPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/assignation/${id}`;
+  const url = `/api/assignation/${id}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -58,7 +58,7 @@ export const updateAssignationFileStatus = async (
   data: UpdateAssignationFileStatusPayload,
 ) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/assignation/update-file-status/${fileId}`;
+  const url = `/api/assignation/update-file-status/${fileId}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -72,7 +72,7 @@ export const updateAssignationFileStatus = async (
 
 export const deleteAssignation = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/assignation/${id}`;
+  const url = `/api/assignation/${id}`;
   const res = await fetch(url, {
     method: "DELETE",
     headers: {

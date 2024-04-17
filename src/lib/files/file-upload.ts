@@ -12,7 +12,7 @@ export type RcCustomRequestOptions = {
 
 export const fileUploadRequestWithToken = async (options: RcCustomRequestOptions) => {
   const { onSuccess, onError, file } = options;
-  const url = options.url ?? "http://localhost:3002/files/upload";
+  const url = options.url ?? "/api/files/upload";
   const method = options.method ?? "POST";
 
   const token = await getToken();
@@ -45,7 +45,7 @@ export const fileUploadRequestWithToken = async (options: RcCustomRequestOptions
 export const downloadFileBySlug = async (slug: string) => {
   try {
     const token = await getToken();
-    const response = await fetch(`http://localhost:3002/files/${slug}`, {
+    const response = await fetch(`/api/files/${slug}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

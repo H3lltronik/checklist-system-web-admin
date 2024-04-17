@@ -4,7 +4,7 @@ import { notification } from "antd";
 
 export const getEnterpriseList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/enterprise";
+  const url = "/api/enterprise";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -16,7 +16,7 @@ export const getEnterpriseList = async () => {
 
 export const getEnterpriseDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/enterprise/${id}`;
+  const url = `/api/enterprise/${id}`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -37,7 +37,7 @@ export const getEnterpriseDetails = async (id: number) => {
 
 export const createEnterprise = async (data: EnterprisePayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/enterprise";
+  const url = "/api/enterprise";
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -51,7 +51,7 @@ export const createEnterprise = async (data: EnterprisePayload) => {
 
 export const updateEnterprise = async (id: number, data: EditEnterprisePayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/enterprise/${id}`;
+  const url = `/api/enterprise/${id}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -65,7 +65,7 @@ export const updateEnterprise = async (id: number, data: EditEnterprisePayload) 
 
 export const deleteEnterprise = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/enterprise/${id}`;
+  const url = `/api/enterprise/${id}`;
   const res = await fetch(url, {
     method: "DELETE",
     headers: {

@@ -4,7 +4,7 @@ import { notification } from "antd";
 
 export const getRoleList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/role";
+  const url = "/api/role";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -16,7 +16,7 @@ export const getRoleList = async () => {
 
 export const getRoleDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/role/${id}`;
+  const url = `/api/role/${id}`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -37,7 +37,7 @@ export const getRoleDetails = async (id: number) => {
 
 export const createRole = async (data: RolePayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/role";
+  const url = "/api/role";
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -51,7 +51,7 @@ export const createRole = async (data: RolePayload) => {
 
 export const updateRole = async (id: number, data: EditRolePayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/role/${id}`;
+  const url = `/api/role/${id}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -65,7 +65,7 @@ export const updateRole = async (id: number, data: EditRolePayload) => {
 
 export const deleteRole = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/role/${id}`;
+  const url = `/api/role/${id}`;
   const res = await fetch(url, {
     method: "DELETE",
     headers: {

@@ -6,7 +6,7 @@ import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
 
 export const getEnterpriseAssignations = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/my-assignations/`;
+  const url = `/api/my-assignations/`;
 
   const response = await fetch(url, {
     headers: {
@@ -21,7 +21,7 @@ export const getEnterpriseAssignations = async () => {
 
 export const getEnterpriseAssignationsDetails = async (assignationId: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/my-assignations/${assignationId}`;
+  const url = `/api/my-assignations/${assignationId}`;
 
   const response = await fetch(url, {
     headers: {
@@ -42,7 +42,7 @@ export type AddFileAssignation = {
 
 export const addFilesToAssignation = async (params: { files: AddFileAssignation[] }) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/my-assignations/add-files`;
+  const url = `/api/my-assignations/add-files`;
 
   const response = await fetch(url, {
     headers: {
@@ -63,7 +63,7 @@ export const removeFileFromAssignation = async (params: {
   assignationUploadedFileId: number;
 }) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/my-assignations/remove-file`;
+  const url = `/api/my-assignations/remove-file`;
 
   const response = await fetch(url, {
     headers: {

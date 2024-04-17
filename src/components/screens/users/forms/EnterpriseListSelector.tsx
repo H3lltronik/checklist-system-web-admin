@@ -40,7 +40,7 @@ export const EnterpriseList: React.FC<EnterpriseListProps> = ({ name }) => {
                     >
                       <ApiSelect<Enterprise[], Enterprise>
                         queryKey={[ENTERPRISE_LIST_QUERY_KEY]}
-                        endpoint="http://localhost:3002/enterprise"
+                        endpoint="/api/enterprise"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}

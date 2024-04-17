@@ -3,7 +3,7 @@ import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
 
 export const getUserList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/user?with=credentials";
+  const url = "/api/user?with=credentials";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -15,7 +15,7 @@ export const getUserList = async () => {
 
 export const getUserDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/${id}?with=enterprises,credentials`;
+  const url = `/api/user/${id}?with=enterprises,credentials`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -27,7 +27,7 @@ export const getUserDetails = async (id: number) => {
 
 export const getUserProfileByEmail = async (email: string) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/by-email/${email}`;
+  const url = `/api/user/by-email/${email}`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -39,7 +39,7 @@ export const getUserProfileByEmail = async (email: string) => {
 
 export const createUser = async (data: UserPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/user";
+  const url = "/api/user";
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -53,7 +53,7 @@ export const createUser = async (data: UserPayload) => {
 
 export const updateUser = async (id: number, data: EditUserPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/${id}`;
+  const url = `/api/user/${id}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -67,7 +67,7 @@ export const updateUser = async (id: number, data: EditUserPayload) => {
 
 export const updateUserFileStatus = async (fileId: number, data: UpdateUserFileStatusPayload) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/update-file-status/${fileId}`;
+  const url = `/api/user/update-file-status/${fileId}`;
   const res = await fetch(url, {
     method: "PATCH",
     headers: {
@@ -81,7 +81,7 @@ export const updateUserFileStatus = async (fileId: number, data: UpdateUserFileS
 
 export const deleteUser = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/${id}`;
+  const url = `/api/user/${id}`;
   const res = await fetch(url, {
     method: "DELETE",
     headers: {

@@ -40,7 +40,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                     >
                       <ApiSelect<Subject[], Subject>
                         queryKey={[SUBJECT_LIST_QUERY_KEY]}
-                        endpoint="http://localhost:3002/auth/subject"
+                        endpoint="/api/auth/subject"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
@@ -58,7 +58,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                     >
                       <ApiSelect<Action[], Action>
                         queryKey={[ACTION_LIST_QUERY_KEY]}
-                        endpoint="http://localhost:3002/auth/action"
+                        endpoint="/api/auth/action"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}

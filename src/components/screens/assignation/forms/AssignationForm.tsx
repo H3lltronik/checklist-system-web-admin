@@ -55,7 +55,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((props, 
             >
               <ApiSelect<Enterprise[], Enterprise>
                 queryKey={[ENTERPRISE_LIST_QUERY_KEY]}
-                endpoint="http://localhost:3002/enterprise"
+                endpoint="/api/enterprise"
                 itemExtractor={(data) => data}
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.name}
@@ -69,7 +69,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((props, 
             <Form.Item<Assignation> name="periodId" label="Periodo" rules={[{ required: true }]}>
               <ApiSelect<Period[], Period>
                 queryKey={["periods"]}
-                endpoint="http://localhost:3002/period"
+                endpoint="/api/period"
                 itemExtractor={(data) => data}
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.name}
@@ -86,7 +86,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((props, 
             >
               <ApiSelect<FileChecklist[], FileChecklist>
                 queryKey={[FILE_CHECKLIST_LIST_QUERY_KEY]}
-                endpoint="http://localhost:3002/file-checklist"
+                endpoint="/api/file-checklist"
                 itemExtractor={(data) => data}
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.title}
