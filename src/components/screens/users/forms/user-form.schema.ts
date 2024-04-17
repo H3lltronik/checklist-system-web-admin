@@ -1,6 +1,7 @@
 import { FormRules } from "@/@types/common";
 
 interface UserFormFields {
+  name: string;
   username: string;
   password: string;
   confirmPassword: string;
@@ -9,6 +10,12 @@ interface UserFormFields {
 }
 
 const userFormRules: FormRules<UserFormFields> = {
+  name: [
+    {
+      required: true,
+      message: "Este campo es requerido",
+    },
+  ],
   username: [
     {
       required: true,
@@ -36,7 +43,7 @@ const userFormRules: FormRules<UserFormFields> = {
     },
     ({ getFieldValue }) => ({
       validator(_, value) {
-        if (!value || getFieldValue("password") === value) {
+        if (!value || getFieldValue(["credential", "password"]) === value) {
           return Promise.resolve();
         }
         return Promise.reject(new Error("Las contraseñas no coinciden"));
@@ -57,6 +64,39 @@ const userFormRules: FormRules<UserFormFields> = {
   ],
 };
 
-export const buildUserFormRules = (editMode: boolean) => {
-  return !editMode ? userFormRules : { ...userFormRules, confirmPassword: [], password: [] };
+export const buildUserFormRules = (editMode: boolean): FormRules<UserFormFields> => {
+  if (!editMode) {
+    return userFormRules;
+  } else {
+    return {
+      ...userFormRules,
+      password: [
+        () => ({
+          validator(_, value) {
+            if (!value) {
+              return Promise.resolve();
+            }
+            if (value.length < 6) {
+              return Promise.reject(new Error("La contraseña debe tener al menos 6 caracteres"));
+            }
+            return Promise.resolve();
+          },
+        }),
+      ],
+      confirmPassword: [
+        ({ getFieldValue }) => ({
+          validator(_, value) {
+            const password = getFieldValue(["credential", "password"]);
+            if (!password) {
+              return Promise.resolve();
+            }
+            if (value !== password) {
+              return Promise.reject(new Error("Las contraseñas no coinciden"));
+            }
+            return Promise.resolve();
+          },
+        }),
+      ],
+    };
+  }
 };

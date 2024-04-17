@@ -21,7 +21,9 @@ import { Route as AdminEnterprisesIndexImport } from './routes/admin/enterprises
 import { Route as AdminAssignationsIndexImport } from './routes/admin/assignations/index'
 import { Route as AdminMyAssignationsIdImport } from './routes/admin/my-assignations/$id'
 import { Route as AdminFileChecklistCreateImport } from './routes/admin/file-checklist/create'
+import { Route as AdminFileChecklistIdImport } from './routes/admin/file-checklist/$id'
 import { Route as AdminEnterprisesCreateImport } from './routes/admin/enterprises/create'
+import { Route as AdminEnterprisesIdImport } from './routes/admin/enterprises/$id'
 import { Route as AdminAssignationsCreateImport } from './routes/admin/assignations/create'
 import { Route as AdminAssignationsIdImport } from './routes/admin/assignations/$id'
 import { Route as AdminCredentialsUsersIndexImport } from './routes/admin/credentials/users/index'
@@ -29,6 +31,7 @@ import { Route as AdminCredentialsProfilesIndexImport } from './routes/admin/cre
 import { Route as AdminFileChecklistEditIdImport } from './routes/admin/file-checklist/edit/$id'
 import { Route as AdminEnterprisesEditIdImport } from './routes/admin/enterprises/edit/$id'
 import { Route as AdminCredentialsUsersCreateImport } from './routes/admin/credentials/users/create'
+import { Route as AdminCredentialsUsersIdImport } from './routes/admin/credentials/users/$id'
 import { Route as AdminCredentialsProfilesCreateImport } from './routes/admin/credentials/profiles/create'
 import { Route as AdminCredentialsProfilesIdImport } from './routes/admin/credentials/profiles/$id'
 import { Route as AdminAssignationsEditIdImport } from './routes/admin/assignations/edit/$id'
@@ -86,8 +89,18 @@ const AdminFileChecklistCreateRoute = AdminFileChecklistCreateImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminFileChecklistIdRoute = AdminFileChecklistIdImport.update({
+  path: '/admin/file-checklist/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AdminEnterprisesCreateRoute = AdminEnterprisesCreateImport.update({
   path: '/admin/enterprises/create',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AdminEnterprisesIdRoute = AdminEnterprisesIdImport.update({
+  path: '/admin/enterprises/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -129,6 +142,11 @@ const AdminCredentialsUsersCreateRoute =
     path: '/admin/credentials/users/create',
     getParentRoute: () => rootRoute,
   } as any)
+
+const AdminCredentialsUsersIdRoute = AdminCredentialsUsersIdImport.update({
+  path: '/admin/credentials/users/$id',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const AdminCredentialsProfilesCreateRoute =
   AdminCredentialsProfilesCreateImport.update({
@@ -184,8 +202,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAssignationsCreateImport
       parentRoute: typeof rootRoute
     }
+    '/admin/enterprises/$id': {
+      preLoaderRoute: typeof AdminEnterprisesIdImport
+      parentRoute: typeof rootRoute
+    }
     '/admin/enterprises/create': {
       preLoaderRoute: typeof AdminEnterprisesCreateImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/file-checklist/$id': {
+      preLoaderRoute: typeof AdminFileChecklistIdImport
       parentRoute: typeof rootRoute
     }
     '/admin/file-checklist/create': {
@@ -222,6 +248,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/credentials/profiles/create': {
       preLoaderRoute: typeof AdminCredentialsProfilesCreateImport
+      parentRoute: typeof rootRoute
+    }
+    '/admin/credentials/users/$id': {
+      preLoaderRoute: typeof AdminCredentialsUsersIdImport
       parentRoute: typeof rootRoute
     }
     '/admin/credentials/users/create': {
@@ -263,7 +293,9 @@ export const routeTree = rootRoute.addChildren([
   AboutLazyRoute,
   AdminAssignationsIdRoute,
   AdminAssignationsCreateRoute,
+  AdminEnterprisesIdRoute,
   AdminEnterprisesCreateRoute,
+  AdminFileChecklistIdRoute,
   AdminFileChecklistCreateRoute,
   AdminMyAssignationsIdRoute,
   AdminAssignationsIndexRoute,
@@ -273,6 +305,7 @@ export const routeTree = rootRoute.addChildren([
   AdminAssignationsEditIdRoute,
   AdminCredentialsProfilesIdRoute,
   AdminCredentialsProfilesCreateRoute,
+  AdminCredentialsUsersIdRoute,
   AdminCredentialsUsersCreateRoute,
   AdminEnterprisesEditIdRoute,
   AdminFileChecklistEditIdRoute,

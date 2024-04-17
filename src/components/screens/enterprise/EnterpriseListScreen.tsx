@@ -9,9 +9,11 @@ const EnterpriseListScreenHeader = () => {
       <div className="flex items-center justify-between">
         <h3 className="!mb-0 text-white text-2xl">Empresas</h3>
       </div>
-      <Button className="ml-auto text-white" type="primary">
-        <Link to="/admin/enterprises/create">Crear</Link>
-      </Button>
+      <Link className="ml-auto" to="/admin/enterprises/create">
+        <Button className="ml-auto text-white" type="primary">
+          Crear
+        </Button>
+      </Link>
     </div>
   );
 };

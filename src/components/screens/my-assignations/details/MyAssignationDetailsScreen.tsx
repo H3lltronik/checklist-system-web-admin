@@ -11,7 +11,7 @@ type MyAssignationDetailsScreenProps = {
 
 export const MyAssignationDetailsScreen = (props: MyAssignationDetailsScreenProps) => {
   // const filesLength = props.data.files?.length ?? 0;
-  const checklistIds = props.data.files.map((file) => file.checklistItemId);
+  const checklistIds = props.data.files?.map((file) => file.checklistItemId);
   const uniqueChecklistIds = [...new Set(checklistIds)];
   const filesLength = uniqueChecklistIds.length;
 

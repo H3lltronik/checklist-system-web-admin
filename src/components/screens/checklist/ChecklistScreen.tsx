@@ -9,9 +9,11 @@ const ChecklistScreenHeader = () => {
       <div className="flex items-center justify-between">
         <h3 className="!mb-0 text-white text-2xl">Requerimientos (Checklists)</h3>
       </div>
-      <Button className="ml-auto text-white" type="primary">
-        <Link to="/admin/file-checklist/create">Crear</Link>
-      </Button>
+      <Link className="ml-auto" to="/admin/file-checklist/create">
+        <Button className="ml-auto text-white" type="primary">
+          Crear
+        </Button>
+      </Link>
     </div>
   );
 };

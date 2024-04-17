@@ -11,8 +11,10 @@ export enum Action {
 
 export enum Subjects {
   FileChecklist = "file_checklist",
-  Assignations = "assignations",
+  Assignations = "assignation",
   Enterprise = "enterprise",
+  User = "user",
+  Role = "role",
   All = "all",
 }
 

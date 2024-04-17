@@ -43,39 +43,66 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
           <Input />
         </Form.Item>
 
-        <Row gutter={16} className="px-5 ">
-          <Col span={6}>
-            <Form.Item name="email" label="Email" rules={userFormRules.username}>
-              <Input placeholder="Email" />
+        <Row gutter={16} className="px-5 gap-y-5">
+          <Col span={24}>
+            <Form.Item<UserFormReturns> name="name" label="Nombre" rules={userFormRules.name}>
+              <Input placeholder="Nombre" />
             </Form.Item>
           </Col>
-          <Col span={6}>
-            <Form.Item name="password" label="Contraseña" rules={userFormRules.password}>
-              <Input.Password placeholder="Contraseña" />
-            </Form.Item>
+
+          <Col span={24} className="bg-slate-200 p-5">
+            <h3 className="mb-5 text-2xl">Credenciales</h3>
+            <Row>
+              <Form.Item<UserFormReturns> name={["credential", "id"]} label="credentialId" hidden>
+                <Input />
+              </Form.Item>
+              <Col span={6}>
+                <Form.Item<UserFormReturns>
+                  name={["credential", "email"]}
+                  label="Email"
+                  rules={userFormRules.username}
+                >
+                  <Input placeholder="Email" />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item<UserFormReturns>
+                  name={["credential", "password"]}
+                  label="Contraseña"
+                  rules={userFormRules.password}
+                >
+                  <Input.Password placeholder="Contraseña" />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item<UserFormReturns>
+                  name={["credential", "repeatPassword"]}
+                  label="Repetir contraseña"
+                  rules={userFormRules.confirmPassword}
+                >
+                  <Input.Password placeholder="Repite la contraseña" type="password" />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item<UserFormReturns>
+                  name={["credential", "roleId"]}
+                  label="Perfil"
+                  rules={userFormRules.roleId}
+                >
+                  <ApiSelect<Role[], Role>
+                    queryKey={[ROLE_LIST_QUERY_KEY]}
+                    endpoint="http://localhost:3002/role"
+                    itemExtractor={(data) => data}
+                    keyExtractor={(item) => item.id}
+                    labelExtractor={(item) => item.name}
+                    valueExtractor={(item) => item.id}
+                    onChange={(value) => console.log(value)}
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
           </Col>
-          <Col span={6}>
-            <Form.Item
-              name="repeatPassword"
-              label="Contraseña"
-              rules={userFormRules.confirmPassword}
-            >
-              <Input.Password placeholder="Repite la contraseña" type="password" />
-            </Form.Item>
-          </Col>
-          <Col span={6}>
-            <Form.Item name="roleId" label="Perfil" rules={userFormRules.roleId}>
-              <ApiSelect<Role[], Role>
-                queryKey={[ROLE_LIST_QUERY_KEY]}
-                endpoint="http://localhost:3002/role"
-                itemExtractor={(data) => data}
-                keyExtractor={(item) => item.id}
-                labelExtractor={(item) => item.name}
-                valueExtractor={(item) => item.id}
-                onChange={(value) => console.log(value)}
-              />
-            </Form.Item>
-          </Col>
+
           <Col span={24} className="bg-slate-200 p-5">
             <h3 className="mb-5 text-2xl">Asignacion de Empresas</h3>
             <EnterpriseList name="enterprises" />
@@ -88,20 +115,29 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
 
 export type UserFormBody = {
   id?: number;
-  email: string;
-  password: string;
-  repeatPassword: string;
-  roleId: number;
+  name: string;
+  pictureUrl: string;
   enterprises: number[];
+  credential: {
+    email: string;
+    password: string;
+    repeatPassword: string;
+    roleId: number;
+  };
 };
 
 export type UserFormReturns = {
-  id: number;
-  email: string;
-  password: string;
-  repeatPassword: string;
-  roleId: number;
+  id?: number;
+  name: string;
+  pictureUrl: string;
   enterprises: {
     enterpriseId: number;
   }[];
+  credential: {
+    id?: number;
+    email: string;
+    password: string;
+    repeatPassword: string;
+    roleId: number;
+  };
 };

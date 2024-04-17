@@ -11,8 +11,8 @@ const actionColumns = createActionsColumn<UserListTableRow>({
   view: {
     onClick: (record) => {
       router.navigate({
-        from: "/admin/file-checklist/",
-        to: `/admin/credentials/users/edit/$id`,
+        from: "/admin/credentials/users",
+        to: `/admin/credentials/users/$id`,
         params: { id: record.id.toString() },
       });
     },
@@ -35,18 +35,18 @@ export const buildUserListColumns = (
 ): AdminDataTableColumn<UserListTableRow>[] => {
   return [
     {
-      title: () => <div className="text-center">Email</div>,
-      dataIndex: "email",
-      key: "email",
-      label: "Email",
+      title: () => <div className="text-center">Nombre</div>,
+      dataIndex: "name",
+      key: "name",
+      label: "Nombre",
       dataType: "string" as keyof ColumnDataTypes,
       exportedWidth: 20,
       width: "160px",
       align: "left",
       //   filters: uniqueRutaOptions,
       filterSearch: true,
-      sorter: (a: UserListTableRow, b: UserListTableRow) => alphabetically(a.email, b.email),
-      onFilter: (value, record: UserListTableRow) => record.email === value,
+      sorter: (a: UserListTableRow, b: UserListTableRow) => alphabetically(a.name, b.name),
+      onFilter: (value, record: UserListTableRow) => record.name === value,
     },
     {
       title: () => <div className="text-center">Perfil</div>,
@@ -58,10 +58,11 @@ export const buildUserListColumns = (
       width: "160px",
       align: "left",
       //   filters: uniqueRutaOptions,
-      render: (_, record) => record.role?.name,
+      render: (_, record) => record.credentials[0].role?.name,
       filterSearch: true,
-      sorter: (a: UserListTableRow, b: UserListTableRow) => alphabetically(a.email, b.email),
-      onFilter: (value, record: UserListTableRow) => record.email === value,
+      sorter: (a: UserListTableRow, b: UserListTableRow) =>
+        alphabetically(a.credentials[0].role?.name, b.credentials[0].role?.name),
+      onFilter: (value, record: UserListTableRow) => record.credentials[0].role?.name === value,
     },
     actionColumns as AdminDataTableColumn<UserListTableRow>,
   ];

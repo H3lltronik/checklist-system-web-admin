@@ -7,6 +7,7 @@ import {
   EditUserPayload,
   getUserDetails,
   getUserList,
+  getUserProfileByEmail,
   updateUser,
 } from "./api";
 
@@ -25,6 +26,14 @@ export const buildUserDetailsQueryOptions = (id: number) =>
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getUserDetails(id),
+  });
+
+export const buildUserProfileByEmailQueryOptions = (email: string | undefined) =>
+  queryOptions({
+    queryKey: [USER_LIST_QUERY_KEY, email] as QueryKey,
+    staleTime: 15 * 1000, // 15 segundos
+    refetchOnWindowFocus: false,
+    queryFn: () => (email ? getUserProfileByEmail(email) : undefined),
   });
 
 export const useCreateUserMutation = () => {

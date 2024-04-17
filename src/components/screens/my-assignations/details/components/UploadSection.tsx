@@ -24,9 +24,7 @@ export const UploadSection = (props: UploadSectionProps) => {
   const handleFileChange = React.useCallback(
     (file: UploadChangeParam<UploadFile<unknown>>) => {
       setFileList(file.fileList);
-      console.log("file.file.status", file.file.status);
       if (file.file.status == "done") {
-        console.log("filesUploaded + file.fileList.length", filesUploaded + file.fileList.length);
         setFilesUploaded(filesUploaded + file.fileList.length);
         setServerResponses([...serverResponses, file.file.response as FileUploadedResponse]);
       }

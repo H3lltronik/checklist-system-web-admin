@@ -11,8 +11,8 @@ const actionColumns = createActionsColumn<EnterpriseListTableRow>({
   view: {
     onClick: (record) => {
       router.navigate({
-        from: "/admin/file-checklist/",
-        to: `/admin/credentials/profiles/$id`,
+        from: "/admin/enterprises/",
+        to: `/admin/enterprises/$id`,
         params: { id: record.id.toString() },
       });
     },

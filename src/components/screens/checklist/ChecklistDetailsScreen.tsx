@@ -1,12 +1,14 @@
-import { Suspense } from "react";
-import { ProfileDetails } from "../profile/details/ProfileDetails";
+import { FileChecklist } from "@/@types/api/entities";
+import { ChecklistDetails } from "./details/ChecklistDetails";
 
-export const ProfileDetailsScreen = () => {
+interface ChecklistDetailsProps {
+  data: FileChecklist;
+}
+
+export const ChecklistDetailsScreen = (props: ChecklistDetailsProps) => {
   return (
     <div>
-      <Suspense fallback={<>Loading...</>}>
-        <ProfileDetails />
-      </Suspense>
+      <ChecklistDetails data={props.data} />
     </div>
   );
 };

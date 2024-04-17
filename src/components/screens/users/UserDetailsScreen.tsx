@@ -1,13 +1,15 @@
-// import { User } from "@/@types/api/entities";
+import { User } from "@/@types/api/entities";
 
-// type MyUserDetailsScreenProps = {
-//   data: User;
-// };
+import { UserDetails } from "./UserDetails";
 
-export const UserDetailsScreen = () => {
+type UserDetailsScreenProps = {
+  data: User;
+};
+
+export const UserDetailsScreen = (props: UserDetailsScreenProps) => {
   return (
     <div>
-      <h1>xd</h1>
+      <UserDetails data={props.data} />
     </div>
   );
 };

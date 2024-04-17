@@ -1,9 +1,9 @@
-import { GetUserListResponse, GetUserResponse } from "@/@types/api/user";
+import { GetUserListResponse, GetUserResponse, UserProfileDetails } from "@/@types/api/user";
 import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
 
 export const getUserList = async () => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "http://localhost:3002/user";
+  const url = "http://localhost:3002/user?with=credentials";
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -15,7 +15,7 @@ export const getUserList = async () => {
 
 export const getUserDetails = async (id: number) => {
   const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `http://localhost:3002/user/${id}?with=enterprises`;
+  const url = `http://localhost:3002/user/${id}?with=enterprises,credentials`;
   const data = await fetch(url, {
     headers: {
       Authorization: `Bearer ${storedToken}`,
@@ -23,6 +23,18 @@ export const getUserDetails = async (id: number) => {
   }).then((res) => res.json());
 
   return data as GetUserResponse;
+};
+
+export const getUserProfileByEmail = async (email: string) => {
+  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
+  const url = `http://localhost:3002/user/by-email/${email}`;
+  const data = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${storedToken}`,
+    },
+  }).then((res) => res.json());
+
+  return data as UserProfileDetails;
 };
 
 export const createUser = async (data: UserPayload) => {
@@ -79,11 +91,28 @@ export const deleteUser = async (id: number) => {
   return res.json();
 };
 
+// {
+//   "name": "Juan Perez",
+//   "pictureUrl": "https://ejemplo.com/imagen.jpg",
+//   "enterprises": [1],
+//   "credential": {
+//     "email": "juan.perez@example.com",
+//     "password": "ContraseñaSegura123",
+//     "repeatPassword": "ContraseñaSegura123",
+//     "roleId": 2
+//   }
+// }
+
 export interface UserPayload {
-  email: string;
-  password: string;
-  roleId: number;
+  name: string;
+  pictureUrl: string;
   enterprises: number[];
+  credential: {
+    email: string;
+    password: string;
+    repeatPassword: string;
+    roleId: number;
+  };
 }
 
 export interface EditUserPayload extends UserPayload {}

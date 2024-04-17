@@ -1,15 +1,14 @@
-// import { Route as AdminProfileDetailsRoute } from "@/routes/admin/credentials/profiles/$id";
-// import { useSuspenseQuery } from "@tanstack/react-query";
-import { Typography } from "antd";
-// import { buildChecklistDetailsQueryOptions } from "../checklist-queries";
+import { FileChecklist } from "@/@types/api/entities";
+import { RequirementDetails } from "./RequirementDetails";
 
-export const ChecklistDetails = () => {
-  // const { id } = AdminProfileDetailsRoute.useParams();
-  // const { data } = useSuspenseQuery(buildChecklistDetailsQueryOptions(Number(id)));
+interface ChecklistDetailsProps {
+  data: FileChecklist;
+}
 
+export const ChecklistDetails = (props: ChecklistDetailsProps) => {
   return (
     <div>
-      <Typography.Title level={2}>Detales de Checklist</Typography.Title>
+      <RequirementDetails data={props.data} />
     </div>
   );
 };

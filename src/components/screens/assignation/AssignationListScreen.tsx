@@ -9,9 +9,11 @@ const AssignationListScreenHeader = () => {
       <div className="flex items-center justify-between">
         <h3 className="!mb-0 text-white text-2xl">Asignaciones</h3>
       </div>
-      <Button className="ml-auto text-white" type="primary">
-        <Link to="/admin/assignations/create">Crear</Link>
-      </Button>
+      <Link className="ml-auto" to="/admin/assignations/create">
+        <Button className="text-white" type="primary">
+          Crear
+        </Button>
+      </Link>
     </div>
   );
 };

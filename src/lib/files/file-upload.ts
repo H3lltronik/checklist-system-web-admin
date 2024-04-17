@@ -2,14 +2,18 @@ import { getToken } from "@/auth";
 import { notification } from "antd";
 import { saveAs } from "file-saver";
 
-type RcCustomRequestOptions = {
+export type RcCustomRequestOptions = {
   onSuccess: (response: unknown, file: unknown) => void;
   onError: (error: unknown) => void;
   file: unknown;
+  url?: string;
+  method?: "POST" | "PUT" | "PATCH" | "DELETE";
 };
 
 export const fileUploadRequestWithToken = async (options: RcCustomRequestOptions) => {
   const { onSuccess, onError, file } = options;
+  const url = options.url ?? "http://localhost:3002/files/upload";
+  const method = options.method ?? "POST";
 
   const token = await getToken();
 
@@ -17,8 +21,8 @@ export const fileUploadRequestWithToken = async (options: RcCustomRequestOptions
   formData.append("file", file as Blob);
 
   try {
-    const response = await fetch("http://localhost:3002/files/upload", {
-      method: "POST",
+    const response = await fetch(url, {
+      method: method,
       headers: {
         Authorization: `Bearer ${token}`,
       },

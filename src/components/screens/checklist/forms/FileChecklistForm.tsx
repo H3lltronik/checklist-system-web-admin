@@ -46,11 +46,11 @@ export const FileChecklistForm = forwardRef<FileChecklistFormHandle, Props>((pro
           <Input />
         </Form.Item>
 
-        <Form.Item name="title" label="Titulo de Checklist" rules={[{ required: true }]}>
+        <Form.Item name="title" label="Titulo" rules={[{ required: true }]}>
           <Input placeholder="Titulo" />
         </Form.Item>
 
-        <Form.Item name="description" label="Titulo de Checklist" rules={[{ required: true }]}>
+        <Form.Item name="description" label="Descripcion" rules={[{ required: true }]}>
           <TextArea placeholder="Descriptcion" />
         </Form.Item>
       </Form>

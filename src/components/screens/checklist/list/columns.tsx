@@ -17,7 +17,7 @@ const actionColumns = createActionsColumn<ChecklistListTableRow>({
     onClick: (record) => {
       router.navigate({
         from: "/admin/file-checklist/",
-        to: `/admin/credentials/profiles/$id`,
+        to: `/admin/file-checklist/$id`,
         params: { id: record.id.toString() },
       });
     },

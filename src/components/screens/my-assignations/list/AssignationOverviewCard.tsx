@@ -25,7 +25,7 @@ export const AssignationOverviewCard = (props: AssignationOverviewCardProps) => 
     </Tooltip>,
   ];
 
-  if (ability.can(Action.Manage, Subjects.Enterprise)) {
+  if (ability.can(Action.Manage, Subjects.Assignations)) {
     actions.push(
       <Tooltip title="Administrar">
         <Link to="/admin/assignations/$id" params={{ id: props.assignationId.toString() }}>

@@ -56,9 +56,7 @@ export const AdminUploadedFilesMetaCard = (props: AdminUploadedFilesMetaCardProp
 
           {props.item.pendingFiles.map((file) => (
             <div className="border border-gray-300 border-dashed p-1 relative py-3 overflow-hidden">
-              <a href={file.uploadedFile.url} target="_blank" className="text-blue-500">
-                <strong>{file.uploadedFile.name} </strong>(<i>{file.uploadedFile.mimetype}</i>)
-              </a>
+              <DownloadFileButton file={file.uploadedFile} />
               <p>{bytesToSize(file.uploadedFile.size)}</p>
               <p className="capitalize">
                 Subido: {dayjs(file.uploadedFile.createdAt).format("dddd DD/MM/YYYY")}

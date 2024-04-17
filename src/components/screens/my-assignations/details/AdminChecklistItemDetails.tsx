@@ -39,6 +39,13 @@ export const AdminChecklistItemDetails = (props: AdminChecklistItemDetailsProps)
         }
       />
 
+      {(props.pendingFiles?.length ?? 0) + (props.acceptedFiles?.length ?? 0) <=
+        (props.maxFiles ?? 1) && (
+        <p className="text-center text-xs text-gray-400">
+          {props.pendingFiles?.length ?? 0} archivo(s) subidos
+        </p>
+      )}
+
       <FormatsMetaCard item={props} />
       <MaxSizeMetaCard item={props} />
       <DescriptionMetaCard item={props} />

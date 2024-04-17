@@ -17,14 +17,22 @@ export type Subject = {
   name: string;
 };
 
-export type User = {
+export type Credential = {
   id: number;
   email: string;
   password: string;
-  isActive: boolean;
   roleId: number;
   role: Role;
+  permissions: Permission[];
+};
+
+export type User = {
+  id: number;
+  name: string;
+  pictureUrl: string;
+  isActive: boolean;
   enterprises?: Enterprise[];
+  credentials: Credential[];
 };
 
 export type Role = {

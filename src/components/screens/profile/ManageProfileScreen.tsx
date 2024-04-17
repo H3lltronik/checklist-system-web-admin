@@ -1,5 +1,4 @@
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
-import { Link } from "@tanstack/react-router";
 import { Button } from "antd";
 import { useEffect, useRef } from "react";
 import { RolePayload } from "./data/role/api";
@@ -12,9 +11,6 @@ const ManageRoleScreenHeader = () => {
       <div className="flex items-center justify-between">
         <h3 className="!mb-0 text-2xl">Perfiles</h3>
       </div>
-      <Button className="ml-auto text-white" type="primary">
-        <Link to="/admin/credentials/profiles/create">Crear</Link>
-      </Button>
     </div>
   );
 };
