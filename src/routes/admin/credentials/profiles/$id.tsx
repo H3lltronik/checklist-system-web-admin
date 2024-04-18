@@ -1,6 +1,7 @@
 import { queryClient } from "@/components/core/queryClient";
 import { buildRoleDetailsQueryOptions } from "@/components/screens/profile/data/role/queries";
 import { ProfileDetailsScreen } from "@/components/screens/profile/details/ProfileDetailsScreen";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
 const loadRoleDetails = async (id: number) => {
@@ -16,5 +17,10 @@ export const Route = createFileRoute("/admin/credentials/profiles/$id")({
 });
 
 function AdminProfileDetailsScreen() {
-  return <ProfileDetailsScreen />;
+  const { id } = Route.useParams();
+  const { data } = useSuspenseQuery(buildRoleDetailsQueryOptions(Number(id)));
+
+  if (!data) return <>No data</>;
+
+  return <ProfileDetailsScreen data={data} />;
 }

@@ -23,5 +23,7 @@ function AdminEnterpriseAssignationDetailsScreen() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(buildEnterpriseAssignationDetailsQueryOptions(Number(id)));
 
+  if (!data) return <>No data</>;
+
   return <MyAssignationDetailsScreen data={data} />;
 }

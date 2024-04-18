@@ -21,5 +21,7 @@ function AdminProfileDetailsScreen() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(buildRoleDetailsQueryOptions(Number(id)));
 
+  if (!data) return <>No data</>;
+
   return <ManageRoleScreen defaultValues={data} />;
 }

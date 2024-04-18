@@ -1,12 +1,14 @@
-import { Suspense } from "react";
+import { GetRoleResponse } from "@/@types/api/roles";
 import { ProfileDetails } from "./ProfileDetails";
 
-export const ProfileDetailsScreen = () => {
+interface ProfileDetailsProps {
+  data: GetRoleResponse;
+}
+
+export const ProfileDetailsScreen = (props: ProfileDetailsProps) => {
   return (
     <div>
-      <Suspense fallback={<>Loading...</>}>
-        <ProfileDetails />
-      </Suspense>
+      <ProfileDetails data={props.data} />
     </div>
   );
 };

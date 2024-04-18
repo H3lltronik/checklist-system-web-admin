@@ -28,6 +28,8 @@ export const buildAssignationDetailsQueryOptions = (id: number) =>
     refetchOnWindowFocus: false,
     queryFn: () => getAssignationDetails(id),
     select: (data) => {
+      if (!data) return data;
+
       return {
         ...data,
         files: data.files.map((file) => ({

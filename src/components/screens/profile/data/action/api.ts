@@ -1,14 +1,11 @@
 import { Action } from "@/@types/api/entities";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
+import { httpRequest } from "@/http/http-client";
 
 export const getActionList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/auth/action";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<Action[]>({
+    url: "/api/action",
+    method: "GET",
+  });
 
-  return data as Action[];
+  return result.data;
 };

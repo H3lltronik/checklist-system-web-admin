@@ -23,5 +23,7 @@ function AdminManageChecklistScreen() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(buildChecklistDetailsQueryOptions(Number(id)));
 
+  if (!data) return <>No data</>;
+
   return <ManageChecklistScreen defaultValues={data} />;
 }

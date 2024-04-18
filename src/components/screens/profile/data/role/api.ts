@@ -1,78 +1,54 @@
 import { GetRoleResponse, GetRolesListResponse } from "@/@types/api/roles";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
-import { notification } from "antd";
+import { httpRequest } from "@/http/http-client";
 
 export const getRoleList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/role";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetRolesListResponse>({
+    url: "/api/role",
+    method: "GET",
+  });
 
-  return data as GetRolesListResponse;
+  return result.data;
 };
 
 export const getRoleDetails = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/role/${id}`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  })
-    .then((res) => res.json())
-    .catch((err) => {
-      notification.error({
-        message: "Ocurrio un error",
-      });
-      console.error(err);
-      return null;
-    });
-  // TODO: Implementa un global error handler
+  const result = await httpRequest<GetRoleResponse>({
+    url: `/api/role/${id}`,
+    method: "GET",
+  });
 
-  return data as GetRoleResponse;
+  return result.data;
 };
 
 export const createRole = async (data: RolePayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/role";
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: "/api/role",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateRole = async (id: number, data: EditRolePayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/role/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/role/${id}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const deleteRole = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/role/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/role/${id}`,
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export interface RolePayload {

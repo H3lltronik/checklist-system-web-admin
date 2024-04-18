@@ -1,107 +1,75 @@
 import { GetUserListResponse, GetUserResponse, UserProfileDetails } from "@/@types/api/user";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
+import { httpRequest } from "@/http/http-client";
 
 export const getUserList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/user?with=credentials";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetUserListResponse>({
+    url: "/api/user?with=credentials",
+    method: "GET",
+  });
 
-  return data as GetUserListResponse;
+  return result.data;
 };
 
 export const getUserDetails = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/user/${id}?with=enterprises,credentials`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetUserResponse>({
+    url: `/api/user/${id}?with=enterprises,credentials`,
+    method: "GET",
+  });
 
-  return data as GetUserResponse;
+  return result.data;
 };
 
 export const getUserProfileByEmail = async (email: string) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/user/by-email/${email}`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<UserProfileDetails>({
+    url: `/api/user/by-email/${email}`,
+    method: "GET",
+  });
 
-  return data as UserProfileDetails;
+  return result.data;
 };
 
 export const createUser = async (data: UserPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/user";
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: "/api/user",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateUser = async (id: number, data: EditUserPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/user/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/user/${id}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateUserFileStatus = async (fileId: number, data: UpdateUserFileStatusPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/user/update-file-status/${fileId}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/user/update-file-status/${fileId}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const deleteUser = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/user/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/user/${id}`,
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
   });
-  return res.json();
-};
 
-// {
-//   "name": "Juan Perez",
-//   "pictureUrl": "https://ejemplo.com/imagen.jpg",
-//   "enterprises": [1],
-//   "credential": {
-//     "email": "juan.perez@example.com",
-//     "password": "ContraseñaSegura123",
-//     "repeatPassword": "ContraseñaSegura123",
-//     "roleId": 2
-//   }
-// }
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
+};
 
 export interface UserPayload {
   name: string;

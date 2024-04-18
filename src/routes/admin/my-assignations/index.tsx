@@ -19,5 +19,7 @@ export const Route = createFileRoute("/admin/my-assignations/")({
 function AdminMyAssignationsScreen() {
   const { data } = useSuspenseQuery(enterpriseAssignationDetailsQueryOptions());
 
+  if (!data) return <>No data</>;
+
   return <MyAssignationsScreen data={data} />;
 }

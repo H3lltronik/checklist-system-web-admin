@@ -10,7 +10,6 @@ const nameInitials = (name: string) => {
     const [firstName, lastName] = name.split(" ");
     return `${firstName[0]}${lastName[0]}`;
   } catch (error) {
-    console.error("Error generating initials:", error);
     return "N/A";
   }
 };

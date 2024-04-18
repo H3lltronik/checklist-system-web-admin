@@ -1,78 +1,54 @@
 import { GetEnterpriseListResponse, GetEnterpriseResponse } from "@/@types/api/enterprise";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
-import { notification } from "antd";
+import { httpRequest } from "@/http/http-client";
 
 export const getEnterpriseList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/enterprise";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetEnterpriseListResponse>({
+    url: "/api/enterprise",
+    method: "GET",
+  });
 
-  return data as GetEnterpriseListResponse;
+  return result.data;
 };
 
 export const getEnterpriseDetails = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/enterprise/${id}`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  })
-    .then((res) => res.json())
-    .catch((err) => {
-      notification.error({
-        message: "Ocurrio un error",
-      });
-      console.error(err);
-      return null;
-    });
-  // TODO: Implementa un global error handler
+  const result = await httpRequest<GetEnterpriseResponse>({
+    url: `/api/enterprise/${id}`,
+    method: "GET",
+  });
 
-  return data as GetEnterpriseResponse;
+  return result.data;
 };
 
 export const createEnterprise = async (data: EnterprisePayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/enterprise";
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: "/api/enterprise",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateEnterprise = async (id: number, data: EditEnterprisePayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/enterprise/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/enterprise/${id}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const deleteEnterprise = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/enterprise/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/enterprise/${id}`,
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export interface EnterprisePayload {

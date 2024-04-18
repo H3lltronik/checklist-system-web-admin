@@ -23,5 +23,7 @@ function AdminManageAssignationScreen() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(buildAssignationDetailsQueryOptions(Number(id)));
 
+  if (!data) return <>No data</>;
+
   return <ManageAssignationScreen defaultValues={data} />;
 }

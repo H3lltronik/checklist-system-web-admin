@@ -2,36 +2,24 @@ import {
   GetAssignationResponse,
   GetEnterpriseAssignationListResponse,
 } from "@/@types/api/assignation";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
+import { httpRequest } from "@/http/http-client";
 
 export const getEnterpriseAssignations = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/my-assignations/`;
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
+  const result = await httpRequest<GetEnterpriseAssignationListResponse>({
+    url: "/api/my-assignations/",
+    method: "GET",
   });
 
-  const data = await response.json();
-
-  return data as GetEnterpriseAssignationListResponse;
+  return result.data;
 };
 
 export const getEnterpriseAssignationsDetails = async (assignationId: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/my-assignations/${assignationId}`;
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
+  const result = await httpRequest<GetAssignationResponse>({
+    url: `/api/my-assignations/${assignationId}`,
+    method: "GET",
   });
 
-  const data = await response.json();
-
-  return data as GetAssignationResponse;
+  return result.data;
 };
 
 export type AddFileAssignation = {
@@ -41,40 +29,26 @@ export type AddFileAssignation = {
 };
 
 export const addFilesToAssignation = async (params: { files: AddFileAssignation[] }) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/my-assignations/add-files`;
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-      "Content-Type": "application/json",
-    },
+  const response = await httpRequest({
+    url: "/api/my-assignations/add-files",
     method: "POST",
     body: JSON.stringify(params),
   });
 
-  const data = await response.json();
-
-  return data;
+  if (response.error) throw new Error(response.errorMessage);
+  return response.data;
 };
 
 export const removeFileFromAssignation = async (params: {
   assignationId: number;
   assignationUploadedFileId: number;
 }) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/my-assignations/remove-file`;
-
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-      "Content-Type": "application/json",
-    },
+  const response = await httpRequest({
+    url: "/api/my-assignations/remove-file",
     method: "DELETE",
     body: JSON.stringify(params),
   });
 
-  const data = await response.json();
-
-  return data;
+  if (response.error) throw new Error(response.errorMessage);
+  return response.data;
 };

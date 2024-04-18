@@ -1,85 +1,68 @@
 import { GetAssignationListResponse, GetAssignationResponse } from "@/@types/api/assignation";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
+import { httpRequest } from "@/http/http-client";
 
 export const getAssignationList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/assignation";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetAssignationListResponse>({
+    url: "/api/assignation",
+    method: "GET",
+  });
 
-  return data as GetAssignationListResponse;
+  return result.data;
 };
 
 export const getAssignationDetails = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/assignation/${id}`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
+  const result = await httpRequest<GetAssignationResponse>({
+    url: `/api/assignation/${id}`,
+    method: "GET",
+  });
 
-  return data as GetAssignationResponse;
+  return result.data;
 };
 
 export const createAssignation = async (data: AssignationPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/assignation";
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: "/api/assignation",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateAssignation = async (id: number, data: EditAssignationPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/assignation/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/assignation/${id}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateAssignationFileStatus = async (
   fileId: number,
   data: UpdateAssignationFileStatusPayload,
 ) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/assignation/update-file-status/${fileId}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/assignation/update-file-status/${fileId}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const deleteAssignation = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/assignation/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/assignation/${id}`,
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export interface AssignationPayload {

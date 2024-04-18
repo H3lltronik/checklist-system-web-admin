@@ -1,68 +1,52 @@
 import { GetChecklistListResponse, GetChecklistResponse } from "@/@types/api/checklist";
-import { LOCAL_STORAGE_TOKEN_KEY } from "@/auth";
+import { httpRequest } from "@/http/http-client";
 
 export const getChecklistList = async () => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/file-checklist";
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
-
-  return data as GetChecklistListResponse;
+  const result = await httpRequest<GetChecklistListResponse>({
+    url: "/api/file-checklist",
+    method: "GET",
+  });
+  return result.data;
 };
 
 export const getChecklistDetails = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/file-checklist/${id}`;
-  const data = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
-  }).then((res) => res.json());
-
-  return data as GetChecklistResponse;
+  const result = await httpRequest<GetChecklistResponse>({
+    url: `/api/file-checklist/${id}`,
+    method: "GET",
+  });
+  return result.data;
 };
 
 export const createChecklist = async (data: FileChecklistPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = "/api/file-checklist";
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: "/api/file-checklist",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const updateChecklist = async (id: number, data: EditFileChecklistPayload) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/file-checklist/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/file-checklist/${id}`,
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${storedToken}`,
-    },
     body: JSON.stringify(data),
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export const deleteChecklist = async (id: number) => {
-  const storedToken = localStorage.getItem(LOCAL_STORAGE_TOKEN_KEY);
-  const url = `/api/file-checklist/${id}`;
-  const res = await fetch(url, {
+  const result = await httpRequest({
+    url: `/api/file-checklist/${id}`,
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${storedToken}`,
-    },
   });
-  return res.json();
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
 };
 
 export interface FileChecklistPayload {

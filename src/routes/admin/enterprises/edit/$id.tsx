@@ -6,7 +6,6 @@ import { createFileRoute } from "@tanstack/react-router";
 
 // @ts-expect-error TODO: fix this
 const loader = async (params) => {
-  console.log("[AdminManageEnterpriseScreen] params", params);
   if (!params.id) return null;
   const queryOptions = buildEnterpriseDetailsQueryOptions(Number(params.id));
   const data = await queryClient.ensureQueryData(queryOptions);
@@ -23,6 +22,8 @@ export const Route = createFileRoute("/admin/enterprises/edit/$id")({
 function AdminManageEnterpriseScreen() {
   const { id } = Route.useParams();
   const { data } = useSuspenseQuery(buildEnterpriseDetailsQueryOptions(Number(id)));
+
+  if (!data) return <>No data</>;
 
   return <ManageEnterpriseScreen defaultValues={data} />;
 }

@@ -1,11 +1,12 @@
-import { Route as AdminProfileDetailsRoute } from "@/routes/admin/credentials/profiles/$id";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { GetRoleResponse } from "@/@types/api/roles";
 import { Card, List, Tag, Typography } from "antd";
-import { buildRoleDetailsQueryOptions } from "../data/role/queries";
 
-export const ProfileDetails = () => {
-  const { id } = AdminProfileDetailsRoute.useParams();
-  const { data } = useSuspenseQuery(buildRoleDetailsQueryOptions(Number(id)));
+interface ProfileDetailsProps {
+  data: GetRoleResponse;
+}
+
+export const ProfileDetails = (props: ProfileDetailsProps) => {
+  const { data } = props;
 
   return (
     <div>
