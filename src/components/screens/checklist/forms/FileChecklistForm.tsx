@@ -62,6 +62,7 @@ export const FileChecklistForm = forwardRef<FileChecklistFormHandle, Props>((pro
           ref={formListRef}
           renderForm={(ref: RefObject<ChecklistItemFormHandle>) => <ChecklistItemForm ref={ref} />}
           itemTitle={(index) => `Archivo ${index + 1}`}
+          min={1}
         />
       </div>
     </div>

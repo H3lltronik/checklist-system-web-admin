@@ -1,9 +1,10 @@
 import { DeleteFilled, PlusCircleFilled } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import React, {
   forwardRef,
   ReactNode,
   RefObject,
+  useCallback,
   useEffect,
   useImperativeHandle,
   useRef,
@@ -15,6 +16,7 @@ interface FormListProps<T> {
   addButtonText?: string;
   itemClassName?: string;
   containerClassName?: string;
+  min?: number;
   // either a string or a function with the index as argument that returns a string
   itemTitle?: string | ((index: number) => string);
 }
@@ -35,8 +37,25 @@ const _FormList = <T,>(props: FormListProps<T>, ref: React.ForwardedRef<FormList
   // Usar una ref para controlar la aplicación de datos iniciales
   const initialDataRef = useRef<Partial<T>[]>([]);
 
-  const addForm = () => setFormRefs((prev) => [...prev, React.createRef<FormRefHandle<T>>()]);
-  const removeForm = (index: number) => setFormRefs((prev) => prev.filter((_, i) => i !== index));
+  const addForm = useCallback(
+    () => setFormRefs((prev) => [...prev, React.createRef<FormRefHandle<T>>()]),
+    [],
+  );
+  const removeForm = (index: number) => {
+    if (props.min)
+      if (formRefs.length <= props.min) {
+        message.warning("Minimo numero de formularios alcanzado");
+        return;
+      }
+
+    setFormRefs((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  useEffect(() => {
+    if (!props.min) return;
+
+    if (formRefs.length < props.min) for (let i = 0; i < props.min; i++) addForm();
+  }, [addForm, formRefs.length, props.min]);
 
   useImperativeHandle(ref, () => ({
     getAllFormsData: async () => {
