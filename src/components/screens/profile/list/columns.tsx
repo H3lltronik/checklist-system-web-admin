@@ -1,10 +1,13 @@
 import { RoleListItem } from "@/@types/api/roles";
 import { ColumnDataTypes } from "@/@types/excel";
+import { QueryKeys } from "@/@types/queries";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
+import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
 import { CheckOutlined } from "@ant-design/icons";
+import { deleteRole } from "../data/role/api";
 
 export type ProfileListTableRow = {
   id: number;
@@ -29,7 +32,17 @@ const actionColumns = createActionsColumn<ProfileListTableRow>({
       });
     },
   },
-  delete: {},
+  delete: {
+    onClick: async (record) => {
+      deleteConfirm({
+        title: "Eliminar permiso",
+        content: `¿Estás seguro de que deseas eliminar el permiso ${record.name}?`,
+        deleteFn: async () => await deleteRole(record.id),
+        recordId: record.id,
+        queryKey: QueryKeys.ROLE_LIST,
+      });
+    },
+  },
   edit: {
     onClick: (record) => {
       router.navigate({

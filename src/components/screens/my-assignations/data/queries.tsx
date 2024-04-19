@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -9,11 +10,9 @@ import {
   removeFileFromAssignation,
 } from "./api";
 
-const ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY = "enterprise_assignation_list";
-
 export const enterpriseAssignationDetailsQueryOptions = () =>
   queryOptions({
-    queryKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY] as QueryKey,
+    queryKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getEnterpriseAssignations(),
@@ -21,7 +20,7 @@ export const enterpriseAssignationDetailsQueryOptions = () =>
 
 export const buildEnterpriseAssignationDetailsQueryOptions = (assignationId: number) =>
   queryOptions({
-    queryKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY, assignationId] as QueryKey,
+    queryKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST, assignationId] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getEnterpriseAssignationsDetails(assignationId),
@@ -29,14 +28,14 @@ export const buildEnterpriseAssignationDetailsQueryOptions = (assignationId: num
 
 export const useAddFilesToAssignationMutation = (assignationId: number) => {
   return useMutation({
-    mutationKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY, assignationId] as QueryKey,
+    mutationKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST, assignationId] as QueryKey,
     mutationFn: (variables: { files: AddFileAssignation[] }) => addFilesToAssignation(variables),
     onSuccess: () => {
       notification.success({
         message: `Se cargo correctamente los archivos en assignation ${assignationId}`,
       });
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY, assignationId],
+        queryKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST, assignationId],
       });
     },
     onError: () => {
@@ -49,7 +48,7 @@ export const useAddFilesToAssignationMutation = (assignationId: number) => {
 
 export const useRemoveFileToAssignationMutation = (assignationId: number) => {
   return useMutation({
-    mutationKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY, assignationId] as QueryKey,
+    mutationKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST, assignationId] as QueryKey,
     mutationFn: (variables: { assignationUploadedFileId: number }) =>
       removeFileFromAssignation({ assignationId, ...variables }),
     onSuccess: () => {
@@ -57,7 +56,7 @@ export const useRemoveFileToAssignationMutation = (assignationId: number) => {
         message: `Se elimino correctamente el archivo de assignation ${assignationId}`,
       });
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_ASSIGNATIONS_LIST_QUERY_KEY, assignationId],
+        queryKey: [QueryKeys.ENTERPRISE_ASSIGNATIONS_LIST, assignationId],
       });
     },
     onError: () => {

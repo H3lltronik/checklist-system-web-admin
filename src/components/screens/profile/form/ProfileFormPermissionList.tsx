@@ -1,9 +1,8 @@
 import { Action, Subject } from "@/@types/api/entities";
+import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Row } from "antd";
-import { ACTION_LIST_QUERY_KEY } from "../data/action/queries";
-import { SUBJECT_LIST_QUERY_KEY } from "../data/subject/queries";
 
 interface ProfileFormPermissionListProps {
   name: string;
@@ -39,7 +38,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                       rules={[{ required: true, message: "Seleccione un subject" }]}
                     >
                       <ApiSelect<Subject[], Subject>
-                        queryKey={[SUBJECT_LIST_QUERY_KEY]}
+                        queryKey={[QueryKeys.SUBJECT_LIST]}
                         endpoint="/api/auth/subject"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
@@ -57,7 +56,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                       rules={[{ required: true, message: "Seleccione un action" }]}
                     >
                       <ApiSelect<Action[], Action>
-                        queryKey={[ACTION_LIST_QUERY_KEY]}
+                        queryKey={[QueryKeys.ACTION_LIST]}
                         endpoint="/api/auth/action"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}

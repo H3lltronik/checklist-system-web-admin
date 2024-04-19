@@ -1,7 +1,6 @@
 import { checkTokenQueryOptions } from "@/auth";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
-import { AnimatePresence } from "framer-motion";
 import { useEffect } from "react";
 import { AuthLayout } from "./AuthLayout";
 import { NoAuthLayout } from "./NoAuthLayout";
@@ -21,5 +20,5 @@ export const AppLayout = () => {
 
   if (!data?.valid === undefined) return <>Loading...</>;
 
-  return <AnimatePresence>{data?.valid ? <AuthLayout /> : <NoAuthLayout />}</AnimatePresence>;
+  return <>{data?.valid ? <AuthLayout /> : <NoAuthLayout />}</>;
 };

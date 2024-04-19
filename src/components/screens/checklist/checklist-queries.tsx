@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -10,10 +11,8 @@ import {
   updateChecklist,
 } from "./api";
 
-export const FILE_CHECKLIST_LIST_QUERY_KEY = "checklist_list";
-
 export const checklistQueryOptions = queryOptions({
-  queryKey: [FILE_CHECKLIST_LIST_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.FILE_CHECKLIST_LIST] as QueryKey,
   staleTime: 15 * 1000, // 15 segundos
   refetchOnWindowFocus: false,
   queryFn: () => getChecklistList(),
@@ -21,7 +20,7 @@ export const checklistQueryOptions = queryOptions({
 
 export const buildChecklistDetailsQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: [FILE_CHECKLIST_LIST_QUERY_KEY, id] as QueryKey,
+    queryKey: [QueryKeys.FILE_CHECKLIST_LIST, id] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getChecklistDetails(id),
@@ -36,7 +35,7 @@ export const useCreateChecklistMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [FILE_CHECKLIST_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.FILE_CHECKLIST_LIST],
       });
     },
     onError: () => {
@@ -57,7 +56,7 @@ export const useUpdateChecklistMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [FILE_CHECKLIST_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.FILE_CHECKLIST_LIST],
       });
     },
     onError: () => {
@@ -77,7 +76,7 @@ export const useDeleteChecklistMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [FILE_CHECKLIST_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.FILE_CHECKLIST_LIST],
       });
     },
     onError: () => {

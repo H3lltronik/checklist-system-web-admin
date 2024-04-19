@@ -1,9 +1,9 @@
 import { Enterprise } from "@/@types/api/entities";
+import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Form, Row } from "antd";
 import React from "react";
-import { ENTERPRISE_LIST_QUERY_KEY } from "../../enterprise/queries";
 
 interface EnterpriseListProps {
   name: string;
@@ -39,7 +39,7 @@ export const EnterpriseList: React.FC<EnterpriseListProps> = ({ name }) => {
                       rules={[{ required: true, message: "Seleccione una empresa" }]}
                     >
                       <ApiSelect<Enterprise[], Enterprise>
-                        queryKey={[ENTERPRISE_LIST_QUERY_KEY]}
+                        queryKey={[QueryKeys.ENTERPRISE_LIST]}
                         endpoint="/api/enterprise"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}

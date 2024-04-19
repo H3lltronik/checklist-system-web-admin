@@ -1,11 +1,10 @@
 // AssignationForm.tsx
 import { Assignation, Enterprise, FileChecklist, Period } from "@/@types/api/entities";
+import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
 import { Col, Form, Input, Row } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
-import { FILE_CHECKLIST_LIST_QUERY_KEY } from "../../checklist/checklist-queries";
-import { ENTERPRISE_LIST_QUERY_KEY } from "../../enterprise/queries";
 
 type Props = {
   defaultValues?: Partial<AssignationFormBody>;
@@ -54,7 +53,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((props, 
               rules={[{ required: true }]}
             >
               <ApiSelect<Enterprise[], Enterprise>
-                queryKey={[ENTERPRISE_LIST_QUERY_KEY]}
+                queryKey={[QueryKeys.ASSIGNATION_LIST]}
                 endpoint="/api/enterprise"
                 itemExtractor={(data) => data}
                 keyExtractor={(item) => item.id}
@@ -85,7 +84,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((props, 
               rules={[{ required: true }]}
             >
               <ApiSelect<FileChecklist[], FileChecklist>
-                queryKey={[FILE_CHECKLIST_LIST_QUERY_KEY]}
+                queryKey={[QueryKeys.FILE_CHECKLIST_LIST]}
                 endpoint="/api/file-checklist"
                 itemExtractor={(data) => data}
                 keyExtractor={(item) => item.id}

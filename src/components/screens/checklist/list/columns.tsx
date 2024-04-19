@@ -1,9 +1,12 @@
 import { ChecklistItem, FileChecklist } from "@/@types/api/entities";
 import { ColumnDataTypes } from "@/@types/excel";
+import { QueryKeys } from "@/@types/queries";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
+import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
+import { deleteChecklist } from "../api";
 
 export type ChecklistListTableRow = {
   id: number;
@@ -22,7 +25,17 @@ const actionColumns = createActionsColumn<ChecklistListTableRow>({
       });
     },
   },
-  delete: {},
+  delete: {
+    onClick: async (record) => {
+      deleteConfirm({
+        title: "Eliminar checklist",
+        content: `¿Estás seguro de que deseas eliminar el checklist ${record.title}?`,
+        deleteFn: async () => await deleteChecklist(record.id),
+        recordId: record.id,
+        queryKey: QueryKeys.FILE_CHECKLIST_LIST,
+      });
+    },
+  },
   edit: {
     onClick: (record) => {
       router.navigate({

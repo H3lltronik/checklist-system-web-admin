@@ -1,4 +1,4 @@
-import { USER_LIST_QUERY_KEY } from "@/components/screens/users/data/queries";
+import { QueryKeys } from "@/@types/queries";
 import { fileUploadRequestWithToken } from "@/lib/files/file-upload";
 import { Button, Image, message } from "antd";
 import { useCallback, useRef, useState } from "react";
@@ -37,7 +37,7 @@ export const AvatarChanger = (props: AvatarChangerProps) => {
         onSuccess: () => {
           message.success("Imagen subida correctamente");
           queryClient.invalidateQueries({
-            queryKey: [USER_LIST_QUERY_KEY, props.userId],
+            queryKey: [QueryKeys.USER_LIST, props.userId],
           });
           setLoading(false);
           if (props.onSuccess) props.onSuccess();

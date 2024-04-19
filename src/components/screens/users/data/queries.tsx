@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -11,10 +12,8 @@ import {
   updateUser,
 } from "./api";
 
-export const USER_LIST_QUERY_KEY = "user_list";
-
 export const userQueryOptions = queryOptions({
-  queryKey: [USER_LIST_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.USER_LIST] as QueryKey,
   staleTime: 15 * 1000, // 15 segundos
   refetchOnWindowFocus: false,
   queryFn: () => getUserList(),
@@ -22,7 +21,7 @@ export const userQueryOptions = queryOptions({
 
 export const buildUserDetailsQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: [USER_LIST_QUERY_KEY, id] as QueryKey,
+    queryKey: [QueryKeys.USER_LIST, id] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getUserDetails(id),
@@ -30,7 +29,7 @@ export const buildUserDetailsQueryOptions = (id: number) =>
 
 export const buildUserProfileByEmailQueryOptions = (email: string | undefined) =>
   queryOptions({
-    queryKey: [USER_LIST_QUERY_KEY, email] as QueryKey,
+    queryKey: [QueryKeys.USER_LIST, email] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => (email ? getUserProfileByEmail(email) : undefined),
@@ -45,7 +44,7 @@ export const useCreateUserMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [USER_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.USER_LIST],
       });
     },
     onError: () => {
@@ -66,7 +65,7 @@ export const useUpdateUserMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [USER_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.USER_LIST],
       });
     },
     onError: () => {
@@ -86,7 +85,7 @@ export const useDeleteUserMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [USER_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.USER_LIST],
       });
     },
     onError: () => {

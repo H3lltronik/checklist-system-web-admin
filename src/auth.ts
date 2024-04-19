@@ -1,6 +1,8 @@
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
+import { QueryKeys } from "./@types/queries";
 import { queryClient } from "./components/core/queryClient";
+import { httpRequest } from "./http/http-client";
 
 export const LOCAL_STORAGE_TOKEN_KEY = "token";
 
@@ -54,39 +56,31 @@ export const checkToken = async (params?: CheckTokenParams): Promise<CheckTokenR
   };
 };
 
-export const login = async (
-  email: string,
-  password: string,
-): Promise<{ access_token: string } | null> => {
-  const res = await fetch("/api/auth/login", {
+type LoginResponse = { access_token: string };
+
+export const login = async (email: string, password: string): Promise<LoginResponse> => {
+  const res = await httpRequest<LoginResponse>({
+    url: "/api/auth/login",
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify({ email, password }),
-  }).then((res) => res.json());
+  });
 
-  if (res.access_token) {
-    localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, res.access_token);
-  } else {
-    notification.error({
-      message: "Credenciales incorrectas",
-    });
-    return null;
-  }
+  if (res.error || !res.data || res.errorMessage) throw new Error(res.errorMessage);
 
-  return res;
+  const access_token = res.data.access_token;
+
+  if (access_token) localStorage.setItem(LOCAL_STORAGE_TOKEN_KEY, access_token);
+  else throw new Error("No access token provided");
+
+  return res.data;
 };
 
 export const logout = () => {
   localStorage.removeItem(LOCAL_STORAGE_TOKEN_KEY);
 };
 
-const AUTH_QUERY_KEY = "auth_token";
-const AUTH_STATUS_QUERY_KEY = "auth_token_status";
-
 export const checkTokenQueryOptions = queryOptions({
-  queryKey: [AUTH_STATUS_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.AUTH_STATUS_QUERY_KEY] as QueryKey,
   staleTime: Infinity,
   refetchOnWindowFocus: true,
   queryFn: () => checkToken(),
@@ -94,7 +88,7 @@ export const checkTokenQueryOptions = queryOptions({
 
 export const useLoginMutation = () => {
   return useMutation({
-    mutationKey: [AUTH_QUERY_KEY],
+    mutationKey: [QueryKeys.AUTH_QUERY_KEY],
     mutationFn: (variables: { email: string; password: string }) =>
       login(variables.email, variables.password),
     onSuccess: () => {
@@ -103,7 +97,7 @@ export const useLoginMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [AUTH_STATUS_QUERY_KEY],
+        queryKey: [QueryKeys.AUTH_STATUS_QUERY_KEY],
       });
     },
     onError: () => {

@@ -1,9 +1,12 @@
 import { FileChecklist, User } from "@/@types/api/entities";
 import { ColumnDataTypes } from "@/@types/excel";
+import { QueryKeys } from "@/@types/queries";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
+import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
+import { deleteUser } from "../data/api";
 
 export interface UserListTableRow extends User {}
 
@@ -17,7 +20,17 @@ const actionColumns = createActionsColumn<UserListTableRow>({
       });
     },
   },
-  delete: {},
+  delete: {
+    onClick: async (record) => {
+      deleteConfirm({
+        title: "Eliminar usuario",
+        content: `¿Estás seguro de que deseas eliminar el usuario ${record.name}?`,
+        deleteFn: async () => await deleteUser(record.id),
+        recordId: record.id,
+        queryKey: QueryKeys.USER_LIST,
+      });
+    },
+  },
   edit: {
     onClick: (record) => {
       router.navigate({

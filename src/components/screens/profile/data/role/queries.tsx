@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -10,10 +11,8 @@ import {
   updateRole,
 } from "./api";
 
-export const ROLE_LIST_QUERY_KEY = "role_list";
-
 export const roleQueryOptions = queryOptions({
-  queryKey: [ROLE_LIST_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.ROLE_LIST] as QueryKey,
   staleTime: 15 * 1000, // 15 segundos
   refetchOnWindowFocus: false,
   queryFn: () => getRoleList(),
@@ -21,7 +20,7 @@ export const roleQueryOptions = queryOptions({
 
 export const buildRoleDetailsQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: [ROLE_LIST_QUERY_KEY, id] as QueryKey,
+    queryKey: [QueryKeys.ROLE_LIST, id] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getRoleDetails(id),
@@ -36,7 +35,7 @@ export const useCreateRoleMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ROLE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ROLE_LIST],
       });
     },
     onError: () => {
@@ -57,7 +56,7 @@ export const useUpdateRoleMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ROLE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ROLE_LIST],
       });
     },
     onError: () => {
@@ -76,7 +75,7 @@ export const useDeleteRoleMutation = () => {
         message: "Empresa eliminada correctamente",
       });
       queryClient.invalidateQueries({
-        queryKey: [ROLE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ROLE_LIST],
       });
     },
     onError: () => {

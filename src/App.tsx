@@ -1,9 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import React, { Suspense } from "react";
-import { AbsoluteCenteredLoader } from "./components/core/AbsoluteCenteredLoader";
 import { queryClient } from "./components/core/queryClient";
 import { AppLayout } from "./components/screens/layouts/AppLayout";
-import { router } from "./main";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -27,8 +25,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AppLayout />
-
-      <AbsoluteCenteredLoader isLoading={router.state.isTransitioning} />
 
       <Suspense>
         <TanStackRouterDevtools />

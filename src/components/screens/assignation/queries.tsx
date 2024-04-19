@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -12,10 +13,8 @@ import {
   UpdateAssignationFileStatusPayload,
 } from "./api";
 
-const ENTERPRISE_LIST_QUERY_KEY = "assignation_list";
-
 export const assignationQueryOptions = queryOptions({
-  queryKey: [ENTERPRISE_LIST_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.ASSIGNATION_LIST] as QueryKey,
   staleTime: 15 * 1000, // 15 segundos
   refetchOnWindowFocus: false,
   queryFn: () => getAssignationList(),
@@ -23,7 +22,7 @@ export const assignationQueryOptions = queryOptions({
 
 export const buildAssignationDetailsQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: [ENTERPRISE_LIST_QUERY_KEY, id] as QueryKey,
+    queryKey: [QueryKeys.ASSIGNATION_LIST, id] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getAssignationDetails(id),
@@ -52,7 +51,7 @@ export const useCreateAssignationMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ASSIGNATION_LIST],
       });
     },
     onError: () => {
@@ -73,7 +72,7 @@ export const useUpdateAssignationMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ASSIGNATION_LIST],
       });
     },
     onError: () => {
@@ -94,7 +93,7 @@ export const useUpdateAssignationFileStatusMutation = (assignationId: number) =>
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY, assignationId],
+        queryKey: [QueryKeys.ASSIGNATION_LIST, assignationId],
       });
     },
     onError: () => {
@@ -114,7 +113,7 @@ export const useDeleteAssignationMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ASSIGNATION_LIST],
       });
     },
     onError: () => {

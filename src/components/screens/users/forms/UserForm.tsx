@@ -1,10 +1,10 @@
 // UserForm.tsx
 import { Role, User } from "@/@types/api/entities";
+import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
 import { Col, Form, Input, Row } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
-import { ROLE_LIST_QUERY_KEY } from "../../profile/data/role/queries";
 import EnterpriseList from "./EnterpriseListSelector";
 import { buildUserFormRules } from "./user-form.schema";
 
@@ -90,7 +90,7 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
                   rules={userFormRules.roleId}
                 >
                   <ApiSelect<Role[], Role>
-                    queryKey={[ROLE_LIST_QUERY_KEY]}
+                    queryKey={[QueryKeys.ROLE_LIST]}
                     endpoint="/api/role"
                     itemExtractor={(data) => data}
                     keyExtractor={(item) => item.id}

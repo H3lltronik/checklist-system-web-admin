@@ -1,18 +1,17 @@
-import { Outlet } from "@tanstack/react-router";
+import { AnimatedOutlet } from "@/components/core/animations/AnimatedOutlet";
+import { useMatch, useMatches } from "@tanstack/react-router";
 import { Layout } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
-import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { AuthHeader } from "./AuthHeader";
 import { SideMenu } from "./sidemenu/SideMenu";
 
-const pageTransition = {
-  initial: { opacity: 0, x: -100 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 100 },
-};
-
 export const AuthLayout = () => {
+  const matches = useMatches();
+  const match = useMatch({ strict: false });
+  const nextMatchIndex = matches.findIndex((d) => d.id === match.id) + 1;
+  const nextMatch = matches[nextMatchIndex];
   const [marginLeft, setMarginLeft] = useState(200);
 
   const handleCollapse = (collapsed: boolean) => {
@@ -33,9 +32,9 @@ export const AuthLayout = () => {
       >
         <AuthHeader />
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
-          <motion.div initial="initial" animate="animate" exit="exit" variants={pageTransition}>
-            <Outlet />
-          </motion.div>
+          <AnimatePresence mode="popLayout">
+            <AnimatedOutlet key={nextMatch.id} />
+          </AnimatePresence>
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Created by{" "}

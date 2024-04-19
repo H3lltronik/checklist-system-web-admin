@@ -1,9 +1,12 @@
 import { Enterprise, FileChecklist } from "@/@types/api/entities";
 import { ColumnDataTypes } from "@/@types/excel";
+import { QueryKeys } from "@/@types/queries";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
+import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
+import { deleteEnterprise } from "../api";
 
 export interface EnterpriseListTableRow extends Enterprise {}
 
@@ -17,7 +20,17 @@ const actionColumns = createActionsColumn<EnterpriseListTableRow>({
       });
     },
   },
-  delete: {},
+  delete: {
+    onClick: async (record) => {
+      deleteConfirm({
+        title: "Eliminar empresa",
+        content: `¿Estás seguro de que deseas eliminar la empresa ${record.name}?`,
+        deleteFn: async () => await deleteEnterprise(record.id),
+        recordId: record.id,
+        queryKey: QueryKeys.ENTERPRISE_LIST,
+      });
+    },
+  },
   edit: {
     onClick: (record) => {
       router.navigate({

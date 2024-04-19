@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { checkTokenQueryOptions } from "@/auth";
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
 import { AvatarChanger } from "@/components/core/AvatarChanger/AvatarChanger";
@@ -6,7 +7,7 @@ import { Route as UserEditRoute } from "@/routes/admin/credentials/users/edit/$i
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "antd";
 import { useEffect, useRef } from "react";
-import { useCreateUserMutation, USER_LIST_QUERY_KEY, useUpdateUserMutation } from "./data/queries";
+import { useCreateUserMutation, useUpdateUserMutation } from "./data/queries";
 import { UserForm, UserFormHandle, UserFormReturns } from "./forms/UserForm";
 
 const ManageUserScreenHeader = ({ name }: { name: string | undefined }) => {
@@ -62,7 +63,7 @@ export const ManageUserScreen: React.FC<Props> = (props) => {
             currentAvatarUrl={props.defaultValues?.pictureUrl}
             onSuccess={() => {
               queryClient.invalidateQueries({
-                queryKey: [USER_LIST_QUERY_KEY, tokenData?.user?.email],
+                queryKey: [QueryKeys.USER_LIST, tokenData?.user?.email],
               });
             }}
           />

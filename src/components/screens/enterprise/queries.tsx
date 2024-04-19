@@ -1,3 +1,4 @@
+import { QueryKeys } from "@/@types/queries";
 import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
@@ -10,10 +11,8 @@ import {
   updateEnterprise,
 } from "./api";
 
-export const ENTERPRISE_LIST_QUERY_KEY = "enterprise_list";
-
 export const enterpriseQueryOptions = queryOptions({
-  queryKey: [ENTERPRISE_LIST_QUERY_KEY] as QueryKey,
+  queryKey: [QueryKeys.ENTERPRISE_LIST] as QueryKey,
   staleTime: 15 * 1000, // 15 segundos
   refetchOnWindowFocus: false,
   queryFn: () => getEnterpriseList(),
@@ -21,7 +20,7 @@ export const enterpriseQueryOptions = queryOptions({
 
 export const buildEnterpriseDetailsQueryOptions = (id: number) =>
   queryOptions({
-    queryKey: [ENTERPRISE_LIST_QUERY_KEY, id] as QueryKey,
+    queryKey: [QueryKeys.ENTERPRISE_LIST, id] as QueryKey,
     staleTime: 15 * 1000, // 15 segundos
     refetchOnWindowFocus: false,
     queryFn: () => getEnterpriseDetails(id),
@@ -36,7 +35,7 @@ export const useCreateEnterpriseMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ENTERPRISE_LIST],
       });
     },
     onError: () => {
@@ -57,7 +56,7 @@ export const useUpdateEnterpriseMutation = () => {
       });
 
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ENTERPRISE_LIST],
       });
     },
     onError: () => {
@@ -76,7 +75,7 @@ export const useDeleteEnterpriseMutation = () => {
         message: "Empresa eliminada correctamente",
       });
       queryClient.invalidateQueries({
-        queryKey: [ENTERPRISE_LIST_QUERY_KEY],
+        queryKey: [QueryKeys.ENTERPRISE_LIST],
       });
     },
     onError: () => {

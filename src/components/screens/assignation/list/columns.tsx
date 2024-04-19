@@ -1,9 +1,12 @@
 import { Assignation, FileChecklist } from "@/@types/api/entities";
 import { ColumnDataTypes } from "@/@types/excel";
+import { QueryKeys } from "@/@types/queries";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
+import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
+import { deleteAssignation } from "../api";
 
 export interface AssignationListTableRow extends Assignation {}
 
@@ -17,7 +20,17 @@ const actionColumns = createActionsColumn<AssignationListTableRow>({
       });
     },
   },
-  delete: {},
+  delete: {
+    onClick: async (record) => {
+      deleteConfirm({
+        title: "Eliminar asignación",
+        content: `¿Estás seguro de que deseas eliminar la asignación ${record.name}?`,
+        deleteFn: async () => await deleteAssignation(record.id),
+        recordId: record.id,
+        queryKey: QueryKeys.ASSIGNATION_LIST,
+      });
+    },
+  },
   edit: {
     onClick: (record) => {
       router.navigate({
