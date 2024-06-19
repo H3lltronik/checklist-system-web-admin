@@ -4,7 +4,7 @@ import { Layout } from "antd";
 import { Content, Footer } from "antd/es/layout/layout";
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { AuthHeader } from "./AuthHeader";
+import { AuthHeader } from "./header/AuthHeader";
 import { SideMenu } from "./sidemenu/SideMenu";
 
 export const AuthLayout = () => {

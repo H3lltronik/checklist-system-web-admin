@@ -11,7 +11,7 @@ export const HeaderGoBackButton = () => {
 
   return (
     <Button
-      className="h-full rounded-none !w-[100px] border-l-0 border-t-0 border-b-0 hover:!bg-transparent hover:border-r !border-white group"
+      className="h-full rounded-none !w-[50px] md:!w-[100px] hover:!bg-transparent border-none group"
       onClick={handleBackPress}
       size="large"
       icon={<ArrowLeftOutlined className="group-hover:text-white duration-200 transition-colors" />}
