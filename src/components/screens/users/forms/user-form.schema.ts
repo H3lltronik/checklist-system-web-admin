@@ -1,4 +1,6 @@
+import { UserPermissions } from "@/@types/auth";
 import { FormRules } from "@/@types/common";
+import { Action, createAbilityForUser, Subjects } from "@/abilities";
 
 interface UserFormFields {
   name: string;
@@ -64,7 +66,10 @@ const userFormRules: FormRules<UserFormFields> = {
   ],
 };
 
-export const buildUserFormRules = (editMode: boolean): FormRules<UserFormFields> => {
+export const buildUserFormRules = (params: { editMode: boolean, permissions?: UserPermissions }): FormRules<UserFormFields> => {
+  const { editMode, permissions } = params;
+  const ability = createAbilityForUser(permissions);
+
   if (!editMode) {
     return userFormRules;
   } else {
@@ -90,7 +95,8 @@ export const buildUserFormRules = (editMode: boolean): FormRules<UserFormFields>
             if (!password) {
               return Promise.resolve();
             }
-            if (value !== password) {
+
+            if (value !== password && !ability.can(Action.Manage, Subjects.All)) {
               return Promise.reject(new Error("Las contraseñas no coinciden"));
             }
             return Promise.resolve();

@@ -2,14 +2,16 @@ import { Enterprise } from "@/@types/api/entities";
 import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Form, Row } from "antd";
+import { Button, Card, Col, Form, FormInstance, Row } from "antd";
 import React from "react";
 
 interface EnterpriseListProps {
   name: string;
+  formRef: FormInstance;
 }
 
 export const EnterpriseList: React.FC<EnterpriseListProps> = ({ name }) => {
+  
   return (
     <Form.List name={name}>
       {(fields, { add, remove }) => (
@@ -39,12 +41,29 @@ export const EnterpriseList: React.FC<EnterpriseListProps> = ({ name }) => {
                       rules={[{ required: true, message: "Seleccione una empresa" }]}
                     >
                       <ApiSelect<Enterprise[], Enterprise>
-                        queryKey={[QueryKeys.ENTERPRISE_LIST]}
-                        endpoint="/api/enterprise"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
                         valueExtractor={(item) => item.id}
+                        endpoints={{
+                          search: {
+                            debounceTime: 500,
+                            endpoint: "/api/enterprise",
+                            initialFetch: {
+                              endpoint: `/api/enterprise?id=${1}`,
+                              queryKey: [QueryKeys.ENTERPRISE_LIST, "1"],
+                              enabled: 1 !== undefined,
+                            },
+                            searchParamName: "search",
+                            queryKey: [QueryKeys.ENTERPRISE_LIST, "search"],
+                          }
+                        }}
+                        optionRenderer={(item) => (
+                          <div className="flex flex-col">
+                            <strong>{item.name}</strong>
+                            <span>{item.email}</span>
+                          </div>
+                        )}
                       />
                     </Form.Item>
                   </Col>

@@ -58,6 +58,20 @@ export interface ChecklistItem {
   allowedMimeTypes: string[];
 }
 
+export interface ExtraChecklistItem {
+  id: number;
+  title: string;
+  description: string;
+  allowMultiple: boolean;
+  maxFiles: number;
+  maxSizeInBytes: number;
+  allowedMimeTypes: string[];
+  assignationId: number;
+  assignation: Assignation;
+  overrideChecklistItemId: number;
+  overrideChecklistItem: ChecklistItem;
+}
+
 export interface Enterprise {
   id: number;
   name: string;
@@ -95,6 +109,7 @@ export interface Assignation {
   fileChecklistId: number;
   fileChecklist: FileChecklist;
   files: AssignationUploadedFile[];
+  extraChecklistItems: ExtraChecklistItem[];
 }
 
 export interface AssignationUploadedFile {

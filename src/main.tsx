@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
 
-export const router = createRouter({ routeTree });
+export const router = createRouter({ routeTree, context: { sideMenuOpened: false } });
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -17,7 +17,7 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} context={{ test: "si" }} />
+      <RouterProvider router={router} />
     </StrictMode>,
   );
 }

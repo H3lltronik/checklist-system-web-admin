@@ -44,7 +44,7 @@ export const ChecklistList = (props: Props) => {
         loading={false}
         title={() => {
           return (
-            <div className="bg-brown-guerrero flex items-center justify-between px-5">
+            <div className="bg-brown-guerrero flex items-center justify-between px-5 flex-col md:flex-row">
               {props.header}
               <div className="text-right flex items-center py-2">
                 <Button

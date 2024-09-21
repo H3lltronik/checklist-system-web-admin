@@ -5,7 +5,7 @@ import { bytesToSize } from "../lib";
 export const MaxSizeMetaCard = ({ item }: { item: ParsedChecklistItem }) => {
   return (
     <>
-      {item.maxSizeInBytes && (
+      {!!item.maxSizeInBytes && (
         <Card.Meta
           className="pt-2"
           description={

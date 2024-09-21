@@ -22,9 +22,11 @@ export const AuthUserPopover = () => {
 
   return (
     <div className="flex items-center gap-5">
-      <Typography.Text strong className="text-lg text-white" ellipsis={true}>
-        Hola, {profileData?.name}
-      </Typography.Text>
+      <div className="hidden md:flex items-center">
+        <Typography.Text strong className="text-lg text-white !m-0" ellipsis={true}>
+          Hola, {profileData?.name}
+        </Typography.Text>
+      </div>
       <Popover
         trigger={"click"}
         content={<PopoverContent name={profileData?.name || ""} avatar={profileData?.pictureUrl} />}

@@ -125,7 +125,7 @@ export type ChecklistItemFormBody = {
   title: string;
   description: string;
   allowMultiple: boolean;
-  maxFiles: number | null;
+  maxFiles?: number;
   maxSizeInBytes: number;
   allowedMimeTypes: string[];
 };

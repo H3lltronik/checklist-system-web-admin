@@ -22,9 +22,6 @@ export const buildAssignationFileValidation = (
       assignation.files?.filter((f) => f.checklistItemId == checklistItem.id && f.deletedAt == null)
         .length ?? 0;
 
-    console.log("params", params);
-    console.log("assignation", assignation);
-    console.log("checklistItem", checklistItem);
     if (filesLength >= (params.maxFiles ?? 1)) {
       notification.info({
         message: "Se ha alcanzado el limite de archivos",
@@ -33,7 +30,9 @@ export const buildAssignationFileValidation = (
       return false;
     }
 
-    const isLt2M = file.size < (params.maxSizeInBytes ?? MAX_FILE_SIZE);
+    let isLt2M = true;
+    if (params.maxSizeInBytes !== undefined && params.maxSizeInBytes > 0)
+      isLt2M = file.size < params.maxSizeInBytes;
 
     const allowedMimeTypes =
       params.allowedMimeTypes?.map((mimeType) => mimeType.toLowerCase()) ?? [];
