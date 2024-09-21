@@ -1,8 +1,10 @@
 // UserForm.tsx
 import { Role, User } from "@/@types/api/entities";
 import { QueryKeys } from "@/@types/queries";
+import { checkTokenQueryOptions } from "@/auth";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
+import { useQuery } from "@tanstack/react-query";
 import { Col, Form, Input, Row } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
 import EnterpriseList from "./EnterpriseListSelector";
@@ -17,7 +19,12 @@ export type UserFormHandle = FormRefHandle<UserFormBody, UserFormReturns>;
 
 export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
   const [form] = Form.useForm();
-  const userFormRules = buildUserFormRules(props.editMode || false);
+  const { data } = useQuery(checkTokenQueryOptions);
+
+  const userFormRules = buildUserFormRules({
+    editMode: props.editMode || false,
+    permissions: data?.user,
+  });
 
   useImperativeHandle(
     ref,
@@ -90,13 +97,17 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
                   rules={userFormRules.roleId}
                 >
                   <ApiSelect<Role[], Role>
-                    queryKey={[QueryKeys.ROLE_LIST]}
-                    endpoint="/api/role"
                     itemExtractor={(data) => data}
                     keyExtractor={(item) => item.id}
                     labelExtractor={(item) => item.name}
                     valueExtractor={(item) => item.id}
                     onChange={(value) => console.log(value)}
+                    endpoints={{
+                      simpleFindAll: {
+                        endpoint: "/api/role",
+                        queryKey: [QueryKeys.ROLE_LIST],
+                      }
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -105,7 +116,7 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
 
           <Col span={24} className="bg-slate-200 p-5">
             <h3 className="mb-5 text-2xl">Asignacion de Empresas</h3>
-            <EnterpriseList name="enterprises" />
+            <EnterpriseList name="enterprises" formRef={form} />
           </Col>
         </Row>
       </Form>

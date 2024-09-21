@@ -71,6 +71,16 @@ export interface AssignationPayload {
   periodId: number;
   enterpriseId: number;
   fileChecklistId: number;
+  extraChecklistItems?: {
+    title: string;
+    description: string;
+    allowMultiple: boolean;
+    maxSizeInBytes: number;
+    allowedMimeTypes: string[];
+    maxFiles?: number;
+    assignationId?: number;
+    overrideChecklistId?: number;
+  }[];
 }
 
 export interface EditAssignationPayload extends AssignationPayload {

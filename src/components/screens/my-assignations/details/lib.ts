@@ -3,8 +3,22 @@ import { ParsedChecklistItem } from "@/@types/common";
 import { ChecklistFileStatus } from "./components/UploadedFilesMetaCard";
 
 export const parseChecklistItems = (data: Assignation): ParsedChecklistItem[] => {
+  const checklistItems = [];
+  const extraChecklistItemsForOverride = data.extraChecklistItems?.filter((i) => i.overrideChecklistItemId);
+  const extraChecklistItems = data.extraChecklistItems?.filter((i) => !i.overrideChecklistItemId);
+
+  if (extraChecklistItems) checklistItems.push(...extraChecklistItems);
+
+  for (const checklistItem of data.fileChecklist?.checklistItems ?? []) {
+    const item = { ...checklistItem };
+    const extraItem = extraChecklistItemsForOverride?.find((i) => i.overrideChecklistItemId === item.id);
+    if (extraItem)
+      checklistItems.push({ ...extraItem });
+    else checklistItems.push({ ...item });
+  }
+
   return (
-    data.fileChecklist.checklistItems?.map((item) => ({
+    checklistItems.map((item) => ({
       ...item,
       uploadedFiles: data.files.filter((file) => file.checklistItemId === item.id),
       deletedFiles: data.files.filter((file) => file.checklistItemId === item.id && file.deletedAt),

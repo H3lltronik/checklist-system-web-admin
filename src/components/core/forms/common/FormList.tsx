@@ -68,24 +68,29 @@ const _FormList = <T,>(props: FormListProps<T>, ref: React.ForwardedRef<FormList
       );
     },
     setFormsData: (dataArray) => {
+      console.log("[FormList] Asignando datos iniciales", dataArray);
       setFormRefs(dataArray.map(() => React.createRef<FormRefHandle<T>>()));
       // Asignar datos iniciales a ref para su uso posterior
       initialDataRef.current = dataArray;
+      console.log("[FormList] Datos iniciales asignados", initialDataRef.current);
     },
   }));
 
   useEffect(() => {
     // Aplicar datos iniciales solo si hay datos para aplicar
+    console.log("Aplicando datos iniciales", initialDataRef.current);
     if (initialDataRef.current.length > 0) {
+      console.log("Hay datos iniciales");
       formRefs.forEach((formRef, index) => {
         if (initialDataRef.current[index] !== undefined) {
+          console.log("Existe dato inicial", initialDataRef.current[index]);
           formRef.current?.setFormData(initialDataRef.current[index]);
         }
       });
       // Limpiar ref de datos iniciales después de aplicarlos para evitar aplicaciones múltiples
       initialDataRef.current = [];
     }
-  }, [formRefs]); // Depender solo de formRefs aquí
+  }, [formRefs, initialDataRef]); // Depender solo de formRefs aquí
 
   return (
     <div className="w-full">
@@ -102,7 +107,7 @@ const _FormList = <T,>(props: FormListProps<T>, ref: React.ForwardedRef<FormList
       {formRefs.length > 0 && (
         <div className={`pl-3 bg-gray-100 p-1 my-2 ${containerClassName}`}>
           {formRefs.map((formRef, index) => (
-            <div key={index} className={`${itemClassName}`}>
+            <div key={index} className={`formRef ${itemClassName}`}>
               <div className="flex items-center pb-4 gap-2">
                 {props.itemTitle ? (
                   typeof props.itemTitle === "string" ? (

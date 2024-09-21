@@ -95,7 +95,7 @@ export const buildAssignationListColumns = (
         alphabetically(a.enterprise.email, b.enterprise.email),
       onFilter: (value, record: AssignationListTableRow) => record.enterprise.email === value,
       render: (_, record: AssignationListTableRow) => (
-        <div className="text-center">{record.enterprise.email}</div>
+        <div className="text-center">{record.enterprise?.email}</div>
       ),
     },
     actionColumns as AdminDataTableColumn<AssignationListTableRow>,

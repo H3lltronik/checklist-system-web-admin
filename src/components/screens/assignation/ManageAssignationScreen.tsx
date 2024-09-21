@@ -43,6 +43,7 @@ export const ManageAssignationScreen: React.FC<Props> = (props) => {
           periodId: data.periodId,
           enterpriseId: data.enterpriseId,
           fileChecklistId: data.fileChecklistId,
+          extraChecklistItems: data.extraChecklistItems,
         },
       });
     } else {

@@ -38,13 +38,18 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                       rules={[{ required: true, message: "Seleccione un subject" }]}
                     >
                       <ApiSelect<Subject[], Subject>
-                        queryKey={[QueryKeys.SUBJECT_LIST]}
-                        endpoint="/api/auth/subject"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
                         valueExtractor={(item) => item.id}
                         onChange={(value) => console.log(value)}
+                        endpoints={{
+                          simpleFindAll: {
+                            endpoint: "/api/auth/subject",
+                            queryKey: [QueryKeys.SUBJECT_LIST],
+                            staleTime: Infinity
+                          }
+                        }}
                       />
                     </Form.Item>
                   </Col>
@@ -56,13 +61,18 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                       rules={[{ required: true, message: "Seleccione un action" }]}
                     >
                       <ApiSelect<Action[], Action>
-                        queryKey={[QueryKeys.ACTION_LIST]}
-                        endpoint="/api/auth/action"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
                         valueExtractor={(item) => item.id}
                         onChange={(value) => console.log(value)}
+                        endpoints={{
+                          simpleFindAll: {
+                            endpoint: "/api/auth/action",
+                            queryKey: [QueryKeys.ACTION_LIST],
+                            staleTime: Infinity
+                            }
+                        }}
                       />
                     </Form.Item>
                   </Col>

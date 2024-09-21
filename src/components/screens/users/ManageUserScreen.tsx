@@ -3,8 +3,8 @@ import { checkTokenQueryOptions } from "@/auth";
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
 import { AvatarChanger } from "@/components/core/AvatarChanger/AvatarChanger";
 import { queryClient } from "@/components/core/queryClient";
-import { Route as UserEditRoute } from "@/routes/admin/credentials/users/edit/$id";
 import { useQuery } from "@tanstack/react-query";
+import { useParams } from "@tanstack/react-router";
 import { Button } from "antd";
 import { useEffect, useRef } from "react";
 import { useCreateUserMutation, useUpdateUserMutation } from "./data/queries";
@@ -27,7 +27,8 @@ type Props = {
 
 export const ManageUserScreen: React.FC<Props> = (props) => {
   const formRef = useRef<UserFormHandle>(null);
-  const { id } = UserEditRoute.useParams();
+  const looseParams = useParams({ strict: false }) as any;
+  const { id } = looseParams;
   const { data: tokenData } = useQuery(checkTokenQueryOptions);
   const { mutateAsync: updateAsync, isPending: isUpdatePending } = useUpdateUserMutation();
   const { mutateAsync: createAsync, isPending: isCreatePending } = useCreateUserMutation();

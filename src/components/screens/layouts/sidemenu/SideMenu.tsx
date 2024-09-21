@@ -1,4 +1,5 @@
 import { Action, createAbilityForUser, Subjects } from "@/abilities";
+import Logo from '@/assets/logo_luve.svg';
 import { checkTokenQueryOptions } from "@/auth";
 import {
   CheckSquareOutlined,
@@ -59,9 +60,10 @@ export const SideMenu = (props: SideMenuProps) => {
         bottom: 0,
       }}
     >
-      <div className="logo bg-white px-2 py-2">
+      <div className="logo bg-white px-2 py-2 h-[72px]">
         <img
-          src="https://ecjn54vsxmr.exactdn.com/wp-content/uploads/2023/10/01-LOGO-GUERRERO-SANTANA-768x235.png?strip=all&lossy=1&ssl=1"
+          className="object-contain h-full w-full"
+          src={Logo}
           alt=""
         />
       </div>

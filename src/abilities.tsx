@@ -20,9 +20,9 @@ export enum Subjects {
 
 export type AppAbility = MongoAbility<[Action, Subjects]>;
 
-export const createAbilityForUser = (user?: UserPermissions) => {
+export const createAbilityForUser = (user?: UserPermissions): AppAbility => {
   if (!user) {
-    return new AbilityBuilder<AppAbility>(createMongoAbility);
+    return new AbilityBuilder<AppAbility>(createMongoAbility).build();
   }
 
   const builder = new AbilityBuilder<AppAbility>(createMongoAbility);

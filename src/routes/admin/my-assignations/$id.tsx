@@ -25,5 +25,7 @@ function AdminEnterpriseAssignationDetailsScreen() {
 
   if (!data) return <>No data</>;
 
+  console.log("[AdminEnterpriseAssignationDetailsScreen] data", data);
+
   return <MyAssignationDetailsScreen data={data} />;
 }

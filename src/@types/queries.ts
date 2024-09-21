@@ -9,6 +9,7 @@ export const QueryKeys = {
   FILE_CHECKLIST_LIST: "file_checklist_list",
   AUTH_QUERY_KEY: "auth_token",
   AUTH_STATUS_QUERY_KEY: "auth_token_status",
+  PERIODS: "periods",
 } as const;
 
 export type AppQueries = (typeof QueryKeys)[keyof typeof QueryKeys];

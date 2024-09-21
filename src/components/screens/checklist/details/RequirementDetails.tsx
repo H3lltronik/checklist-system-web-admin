@@ -30,7 +30,7 @@ const ChecklistItemDetails: React.FC<ChecklistItemDetailsProps> = ({ item }) => 
         {item.maxSizeInBytes ? `${item.maxSizeInBytes} bytes` : "Unlimited"}
       </Descriptions.Item>
       <Descriptions.Item label="Allowed Mime Types">
-        {item.allowedMimeTypes.join(", ")}
+        {item.allowedMimeTypes?.join(", ")}
       </Descriptions.Item>
     </Descriptions>
   );
