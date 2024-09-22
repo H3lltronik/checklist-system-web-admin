@@ -1,4 +1,6 @@
 // AssignationForm.tsx
+import { GetChecklistListResponse } from "@/@types/api/checklist";
+import { GetEnterpriseListResponse } from "@/@types/api/enterprise";
 import { Assignation, Enterprise, FileChecklist, Period } from "@/@types/api/entities";
 import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
@@ -62,26 +64,23 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
               label="Empresa"
               rules={[{ required: true }]}
             >
-              <ApiSelect<Enterprise[], Enterprise>
-                // queryKey={[QueryKeys.ENTERPRISE_LIST]}
-                // endpoint="/api/enterprise"
-                itemExtractor={(data) => data}
+              <ApiSelect<GetEnterpriseListResponse, Enterprise>
+                itemExtractor={(data) => data.data}
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.name}
                 valueExtractor={(item) => item.id}
                 onChange={(value) => console.log(value)}
                 endpoints={{
-                  // simpleFindAll: {
-                  //   endpoint: "/api/enterprise",
-                  //   queryKey: [QueryKeys.ENTERPRISE_LIST],
-                  // },
                   search: {
                     debounceTime: 300,
                     endpoint: "/api/enterprise",
                     initialFetch: {
-                      endpoint: `/api/enterprise?id=${enterpriseIdWatch}`,
+                      endpoint: `/api/enterprise/${enterpriseIdWatch}`,
                       queryKey: [QueryKeys.FILE_CHECKLIST_LIST, enterpriseIdWatch],
                       enabled: enterpriseIdWatch !== undefined,
+                    },
+                    searchParams: {
+                      limit: 2,
                     },
                     searchParamName: "search",
                     queryKey: [QueryKeys.FILE_CHECKLIST_LIST, "search"],
@@ -114,8 +113,8 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
               label="Checklist"
               rules={[{ required: true }]}
             >
-              <ApiSelect<FileChecklist[], FileChecklist>
-                itemExtractor={(data) => data}
+              <ApiSelect<GetChecklistListResponse, FileChecklist>
+                itemExtractor={(data) => data.data}
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.title}
                 valueExtractor={(item) => item.id}
@@ -152,6 +151,11 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
             </Form.Item>
           </Col>
 
+          <div className="my-5 w-full">
+          <hr className="w-full my-2" />
+          <h3 className="text-xl">Requerimientos extra</h3>
+          </div>
+
           <div className="flex flex-wrap gap-2 flex-row w-full">
             <FormList
               addButtonText="Agregar archivo"
@@ -162,7 +166,7 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
                 <ExtraChecklistItemForm fileChecklistId={checklistIdWatch} ref={ref} />
               )}
               itemTitle={(index) => `Archivo ${index + 1}`}
-              min={1}
+              min={0}
             />
           </div>
         </Row>

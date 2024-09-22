@@ -11,3 +11,13 @@ export type ApiResponse<T> = {
   errorMessage?: string;
   status?: number;
 };
+
+export type GetListResponse<T> = {
+  data: T[];
+  totalItems: number;
+  currentPage: number;
+  totalPages: number;
+  itemsPerPage: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
+};

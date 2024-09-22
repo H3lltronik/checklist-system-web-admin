@@ -6,17 +6,20 @@ import {
   createEnterprise,
   deleteEnterprise,
   EditEnterprisePayload,
+  FindAllEnterprisesDto,
   getEnterpriseDetails,
   getEnterpriseList,
   updateEnterprise,
 } from "./api";
 
-export const enterpriseQueryOptions = queryOptions({
-  queryKey: [QueryKeys.ENTERPRISE_LIST] as QueryKey,
-  staleTime: 15 * 1000, // 15 segundos
-  refetchOnWindowFocus: false,
-  queryFn: () => getEnterpriseList(),
-});
+export const enterpriseQueryOptions = (params: FindAllEnterprisesDto) => 
+  queryOptions({
+    queryKey: [QueryKeys.ENTERPRISE_LIST, params] as QueryKey,
+    staleTime: 15 * 1000, // 15 segundos
+    refetchOnWindowFocus: false,
+    queryFn: () => getEnterpriseList(params),
+  });
+
 
 export const buildEnterpriseDetailsQueryOptions = (id: number) =>
   queryOptions({

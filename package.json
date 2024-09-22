@@ -23,6 +23,7 @@
     "framer-motion": "^11.0.25",
     "lodash.clonedeep": "^4.5.0",
     "lodash.debounce": "^4.0.8",
+    "qs": "^6.13.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "zod": "^3.22.4"
@@ -32,6 +33,7 @@
     "@tanstack/router-vite-plugin": "^1.26.6",
     "@types/file-saver": "^2.0.7",
     "@types/lodash.debounce": "^4.0.9",
+    "@types/qs": "^6.9.16",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

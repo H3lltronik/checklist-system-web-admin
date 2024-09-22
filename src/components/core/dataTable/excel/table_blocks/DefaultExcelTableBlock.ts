@@ -14,12 +14,22 @@ export abstract class DefaultExcelTableBlock implements IBlock {
   }
 
   protected abstract getHeaderStyle(): ExcelJS.Style | Partial<ExcelJS.Style>;
-  protected abstract getDataStyle(dataType: string): ExcelJS.Style | Partial<ExcelJS.Style>;
-  protected abstract getColumnStyle(column: Column): ExcelJS.Style | Partial<ExcelJS.Style>;
+  protected abstract getDataStyle(
+    dataType: string
+  ): ExcelJS.Style | Partial<ExcelJS.Style>;
+  protected abstract getColumnStyle(
+    column: Column
+  ): ExcelJS.Style | Partial<ExcelJS.Style>;
 
-  public addToWorksheet(worksheet: ExcelJS.Worksheet, startRow: number, startCol: number): void {
+  public addToWorksheet(
+    worksheet: ExcelJS.Worksheet,
+    startRow: number,
+    startCol: number
+  ): void {
     this.columns.forEach((col, colIndex) => {
-      const headerCell = worksheet.getRow(startRow).getCell(startCol + colIndex);
+      const headerCell = worksheet
+        .getRow(startRow)
+        .getCell(startCol + colIndex);
       headerCell.value = col.header;
       headerCell.style = this.getHeaderStyle();
 
@@ -33,23 +43,32 @@ export abstract class DefaultExcelTableBlock implements IBlock {
       this.columns.forEach((col, colIndex) => {
         let onCellStyle: Partial<ExcelJS.Style> | undefined = {};
         let onCellDataType: keyof ColumnDataTypes | undefined = undefined;
+        let onCellValue = undefined;
 
         if (col.onExportCell) {
           const onCellResult = col.onExportCell(item, rowIndex);
           const cellSpan = onCellResult?.colSpan || 1;
           onCellStyle = onCellResult?.style ?? {};
           onCellDataType = onCellResult?.dataType;
+          onCellValue = onCellResult.value ?? item[col.key];
 
           if (cellSpan > 1) {
             const start = currentCol;
             const end = start + cellSpan - 1;
-            worksheet.mergeCells(startRow + rowIndex + 1, start, startRow + rowIndex + 1, end);
+            worksheet.mergeCells(
+              startRow + rowIndex + 1,
+              start,
+              startRow + rowIndex + 1,
+              end
+            );
 
-            const mergedCell = worksheet.getRow(startRow + rowIndex + 1).getCell(start);
+            const mergedCell = worksheet
+              .getRow(startRow + rowIndex + 1)
+              .getCell(start);
             if (onCellStyle) {
               Object.assign(mergedCell.style, onCellStyle);
             }
-            mergedCell.value = item[col.key];
+            mergedCell.value = onCellValue;
 
             currentCol = end + 1;
           }
@@ -57,9 +76,19 @@ export abstract class DefaultExcelTableBlock implements IBlock {
 
         if (currentCol > startCol + colIndex) return;
 
-        const cell = worksheet.getRow(startRow + rowIndex + 1).getCell(currentCol);
-        if (col.dataType === "money" && typeof item[col.key] === "string") {
-          cell.value = isNaN(parseFloat(item[col.key])) ? item[col.key] : parseFloat(item[col.key]);
+        const cell = worksheet
+          .getRow(startRow + rowIndex + 1)
+          .getCell(currentCol);
+
+        if (onCellValue) {
+          cell.value = onCellValue;
+        } else if (
+          col.dataType === "money" &&
+          typeof item[col.key] === "string"
+        ) {
+          cell.value = isNaN(parseFloat(item[col.key]))
+            ? item[col.key]
+            : parseFloat(item[col.key]);
         } else {
           cell.value = item[col.key];
         }

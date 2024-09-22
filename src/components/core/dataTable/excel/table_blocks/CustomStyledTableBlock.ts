@@ -1,5 +1,5 @@
-import { Column } from "@/@types/excel";
 import ExcelJS from "exceljs";
+import { Column } from "@/@types/excel";
 import { DefaultExcelTableBlock, argbColor } from "./DefaultExcelTableBlock";
 
 export class CustomStyledTableBlock extends DefaultExcelTableBlock {
@@ -76,9 +76,25 @@ export class CustomStyledTableBlock extends DefaultExcelTableBlock {
         styleResult = { ...styleResult, ...style };
         break;
       }
+      case "percent": {
+        const style: Partial<ExcelJS.Style> = {
+          numFmt: "0.0%",
+          font: { color: { argb: argbColor("#000") } },
+        };
+        styleResult = { ...styleResult, ...style };
+        break;
+      }
       case "time": {
         const style: Partial<ExcelJS.Style> = {
           numFmt: "h:mm:ss",
+          font: { color: { argb: argbColor("#000") } },
+        };
+        styleResult = { ...styleResult, ...style };
+        break;
+      }
+      case "timestamp": {
+        const style: Partial<ExcelJS.Style> = {
+          numFmt: "yyyy-mm-dd h:mm:ss",
           font: { color: { argb: argbColor("#000") } },
         };
         styleResult = { ...styleResult, ...style };

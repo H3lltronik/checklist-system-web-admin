@@ -2,6 +2,7 @@ import { RedoOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
 import { AutoComplete, Button, Select, Tooltip } from "antd";
 import debounce from "lodash.debounce";
+import qs from "qs";
 import React, { useCallback, useEffect, useState } from "react";
 
 const { Option } = Select;
@@ -134,6 +135,11 @@ interface ApiSelectProps<T, U> {
       searchParamName: string;
 
       /**
+       * The search parameters to append to the search query.
+       */
+      searchParams?: Record<string, unknown>;
+
+      /**
        * Time in milliseconds to debounce the search input.
        */
       debounceTime: number;
@@ -201,9 +207,11 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
     staleTime: simpleFindAll?.staleTime ?? 0,
   });
 
+  const searchParams = search?.searchParams ? `&${qs.stringify(search.searchParams)}` : "";
+
   const searchQuery = useQuery<T, Error>({
     queryKey: [search?.queryKey, searchTerm],
-    queryFn: () => fetchItems<T>(`${search!.endpoint}?${search!.searchParamName}=${searchTerm}`),
+    queryFn: () => fetchItems<T>(`${search!.endpoint}?${search!.searchParamName}=${searchTerm}&${searchParams}`),
     enabled: !!search && searchTerm.length > 0,
     refetchOnWindowFocus: search?.refetchOnWindowFocus ?? false,
     staleTime: search?.staleTime ?? 0,

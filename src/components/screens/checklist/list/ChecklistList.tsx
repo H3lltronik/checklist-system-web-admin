@@ -33,14 +33,14 @@ export const ChecklistList = (props: Props) => {
         ref={tableRef}
         bordered
         rowKey={"id"}
-        columns={buildChecklistListColumns(data ?? []) as AdminDataTableColumn<AnyObject>[]}
+        columns={buildChecklistListColumns(data?.data ?? []) as AdminDataTableColumn<AnyObject>[]}
         size="small"
         pagination={{
           defaultPageSize: 50,
           showSizeChanger: true,
           pageSizeOptions: ["10", "20", "50", "100", "200"],
         }}
-        data={data ?? []}
+        data={data?.data ?? []}
         loading={false}
         title={() => {
           return (

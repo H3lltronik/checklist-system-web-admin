@@ -1,14 +1,32 @@
 import { GetEnterpriseListResponse, GetEnterpriseResponse } from "@/@types/api/enterprise";
 import { httpRequest } from "@/http/http-client";
 
-export const getEnterpriseList = async () => {
+export class FindAllEnterprisesDto {
+  search?: string;
+  id?: string | number;
+  perPage?: number;
+  limit?: number;
+  page?: number; // Página actual
+}
+
+export const getEnterpriseList = async (params: FindAllEnterprisesDto) => {
+  const url = new URL("/api/enterprise", window.location.origin);
+
+  if (params?.search) url.searchParams.append("search", params.search);
+  if (params?.id) url.searchParams.append("id", params.id.toString());
+  if (params?.limit) url.searchParams.append("limit", params.limit.toString());
+  if (params?.perPage) url.searchParams.append("perPage", params.perPage.toString());
+  if (params?.page) url.searchParams.append("page", params.page.toString()); // Añadir el parámetro page
+
   const result = await httpRequest<GetEnterpriseListResponse>({
-    url: "/api/enterprise",
+    url: url.toString(),
     method: "GET",
   });
 
   return result.data;
 };
+
+
 
 export const getEnterpriseDetails = async (id: number) => {
   const result = await httpRequest<GetEnterpriseResponse>({

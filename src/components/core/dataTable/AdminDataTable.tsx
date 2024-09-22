@@ -2,7 +2,13 @@ import { Column, ColumnDataTypes, OnCellReturn } from "@/@types/excel";
 import { Table, TableProps } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { ColumnsType } from "antd/es/table";
-import React, { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { CustomStyledTableBlock } from "./excel/table_blocks/CustomStyledTableBlock";
 import { exportBlocks } from "./excel/table_blocks/exportTableBlocks";
 
@@ -37,11 +43,12 @@ export type TableExportHandle = {
 
 export type AdminDataTableHandles = object & TableExportHandle;
 
-const _AdminDataTable = <T extends AnyObject>(
+const AdminDataTable = <T extends AnyObject>(
   props: AdminDataTableProps<T>,
-  ref: React.ForwardedRef<AdminDataTableHandles>,
+  ref: React.ForwardedRef<AdminDataTableHandles>
 ) => {
-  const { data, columns, customExport, className, scroll, ...tableProps } = props;
+  const { data, columns, customExport, className, scroll, ...tableProps } =
+    props;
 
   useImperativeHandle(ref, () => ({
     exportToExcel(params) {
@@ -55,12 +62,13 @@ const _AdminDataTable = <T extends AnyObject>(
           dataType: col.dataType,
           align: col.align || "left",
           width: Number(col.exportedWidth),
+          onExportCell: col.onExportCell,
         }));
 
         const styledTable = new CustomStyledTableBlock(
           params?.sheetTitle ?? "Sheet1",
           styledTableColumns,
-          data,
+          data
         );
         exportBlocks({
           blocks: [{ block: styledTable, startRow: 1, startCol: 1 }],
@@ -94,14 +102,20 @@ const _AdminDataTable = <T extends AnyObject>(
     }, 10);
     const calculateTableHeight = () => {
       if (containerRef.current) {
-        const containerHeight = containerRef.current?.getBoundingClientRect().height;
+        const containerHeight =
+          containerRef.current?.getBoundingClientRect().height;
         // Calcula el espacio ocupado por otros elementos, incluyendo márgenes
-        const elements = [".ant-table-title", ".ant-table-header", ".ant-table-pagination"];
+        const elements = [
+          ".ant-table-title",
+          ".ant-table-header",
+          ".ant-table-pagination",
+        ];
         const extraSpace = elements.reduce((total, selector) => {
           const element = containerRef.current?.querySelector(selector) as HTMLElement;
           if (element) {
             const style = window.getComputedStyle(element);
-            const marginVertical = parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+            const marginVertical =
+              parseFloat(style.marginTop) + parseFloat(style.marginBottom);
             return total + element.offsetHeight + marginVertical;
           }
           return total;
@@ -132,5 +146,5 @@ const _AdminDataTable = <T extends AnyObject>(
   );
 };
 
-const AdminDataTable = forwardRef(_AdminDataTable);
-export default AdminDataTable;
+const ForwardedAdminDataTable = forwardRef(AdminDataTable);
+export default ForwardedAdminDataTable;

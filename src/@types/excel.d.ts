@@ -11,6 +11,7 @@ type OnCellReturn = {
   colSpan?: number | null;
   style?: Partial<ExcelJS.Style> | null;
   dataType?: keyof ColumnDataTypes;
+  value?: string | number | null;
 };
 
 type Column<T = any> = {
@@ -24,6 +25,10 @@ type Column<T = any> = {
 };
 
 export interface IBlock {
-  addToWorksheet(worksheet: ExcelJS.Worksheet, startRow: number, startCol: number): void;
+  addToWorksheet(
+    worksheet: ExcelJS.Worksheet,
+    startRow: number,
+    startCol: number
+  ): void;
   sheetTitle: string;
 }
