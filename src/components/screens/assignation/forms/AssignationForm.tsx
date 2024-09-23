@@ -69,13 +69,12 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
                 keyExtractor={(item) => item.id}
                 labelExtractor={(item) => item.name}
                 valueExtractor={(item) => item.id}
-                onChange={(value) => console.log(value)}
                 endpoints={{
                   search: {
                     debounceTime: 300,
                     endpoint: "/api/enterprise",
                     initialFetch: {
-                      endpoint: `/api/enterprise/${enterpriseIdWatch}`,
+                      endpoint: `/api/enterprise?id=${enterpriseIdWatch}`,
                       queryKey: [QueryKeys.FILE_CHECKLIST_LIST, enterpriseIdWatch],
                       enabled: enterpriseIdWatch !== undefined,
                     },

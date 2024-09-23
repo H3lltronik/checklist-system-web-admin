@@ -12,4 +12,8 @@ export const QueryKeys = {
   PERIODS: "periods",
 } as const;
 
+export const MutationKeys = {
+  FILE_UPLOAD: "file_upload",
+}
+
 export type AppQueries = (typeof QueryKeys)[keyof typeof QueryKeys];

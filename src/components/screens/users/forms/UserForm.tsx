@@ -34,7 +34,7 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
 
         return {
           ...values,
-          enterprises: values.enterprises.map((item) => item.enterpriseId),
+          enterprises: values?.enterprises?.map((item) => item.enterpriseId),
         };
       },
       setFormData: (data) => {

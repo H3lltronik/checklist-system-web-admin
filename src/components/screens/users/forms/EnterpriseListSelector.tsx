@@ -1,3 +1,4 @@
+import { GetEnterpriseListResponse } from "@/@types/api/enterprise";
 import { Enterprise } from "@/@types/api/entities";
 import { QueryKeys } from "@/@types/queries";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
@@ -40,8 +41,8 @@ export const EnterpriseList: React.FC<EnterpriseListProps> = ({ name }) => {
                       label="Empresa"
                       rules={[{ required: true, message: "Seleccione una empresa" }]}
                     >
-                      <ApiSelect<Enterprise[], Enterprise>
-                        itemExtractor={(data) => data}
+                      <ApiSelect<GetEnterpriseListResponse, Enterprise>
+                        itemExtractor={(data) => data.data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
                         valueExtractor={(item) => item.id}

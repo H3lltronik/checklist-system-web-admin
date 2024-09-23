@@ -30,7 +30,7 @@ interface ApiSelectProps<T, U> {
    * @param data - The fetched data from which to extract items.
    * @returns An array of extracted items.
    */
-  itemExtractor: (data: T) => U[];
+  itemExtractor: (data: T) => U[] | undefined;
 
   /**
    * Function to extract a unique key for each item.
@@ -228,7 +228,9 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
   useEffect(() => {
     if (initialFetchQuery.data && props.value) {
       const items = props.itemExtractor(initialFetchQuery.data);
-      const item = items.find((i) => props.valueExtractor(i) === props.value);
+      console.log("[ApiSelect] initialFetchQuery", initialFetchQuery.data);
+      console.log("[ApiSelect] items", items);
+      const item = items?.find((i) => props.valueExtractor(i) === props.value);
       setSelectedItem(item || null);
       if (item) {
         setInputValue(props.labelExtractor(item) as string); // Establecer inputValue con el label del item seleccionado
@@ -248,7 +250,7 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
   };
 
   const handleSelect = (value: string | number) => {
-    const item = items.find((i) => props.valueExtractor(i) === value);
+    const item = items?.find((i) => props.valueExtractor(i) === value);
     setSelectedItem(item || null);
     setInputValue(item ? (props.labelExtractor(item) as string) : ""); // Mostrar el label en el input después de seleccionar
     props.onChange?.(value);
@@ -297,7 +299,7 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
       onSelect={handleSelect} // Manejar la selección del valor
       backfill
       placeholder={props.placeholder ?? defaultPlaceholder}
-      options={items.map((item) => ({
+      options={items?.map((item) => ({
         value: props.valueExtractor(item),
         label: props.optionRenderer ? props.optionRenderer(item) : props.labelExtractor(item),
       }))}
