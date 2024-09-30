@@ -64,7 +64,7 @@ export interface ChecklistItemPayload {
   title: string;
   description: string;
   allowMultiple: boolean;
-  maxSizeInBytes: number;
+  maxSize: number;
   allowedMimeTypes: string[];
   maxFiles?: number;
 }

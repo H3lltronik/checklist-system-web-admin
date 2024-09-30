@@ -101,8 +101,13 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
                   simpleFindAll: {
                     endpoint: "/api/period",
                     queryKey: [QueryKeys.PERIODS],
+                    searchOptions: {
+                      keys: ["name"],
+                      threshold: 0.3,
+                    }
                   }
                 }}
+                
               />
             </Form.Item>
           </Col>

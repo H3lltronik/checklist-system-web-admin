@@ -1,5 +1,6 @@
 import { Assignation } from "@/@types/api/entities";
 import { ParsedChecklistItem } from "@/@types/common";
+import { SizeSuffix } from "@/@types/sizes";
 import { ChecklistFileStatus } from "./components/UploadedFilesMetaCard";
 
 export const parseChecklistItems = (data: Assignation): ParsedChecklistItem[] => {
@@ -51,3 +52,10 @@ export const bytesToSize = (bytes: number) => {
   const i = Math.floor(Math.log(bytes) / Math.log(1024));
   return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${sizes[i]}`;
 };
+
+export const bytesWithSuffix = (bytes: number, sizeSuffix: SizeSuffix) => {
+  if (sizeSuffix === SizeSuffix.BYTES) return bytes;
+  if (sizeSuffix === SizeSuffix.KILOBYTES) return bytes * 1024;
+  if (sizeSuffix === SizeSuffix.MEGABYTES) return bytes * 1024 * 1024;
+  if (sizeSuffix === SizeSuffix.GIGABYTES) return bytes * 1024 * 1024 * 1024;
+}

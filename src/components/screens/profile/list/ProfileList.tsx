@@ -1,8 +1,9 @@
+import { checkTokenQueryOptions } from "@/auth";
 import AdminDataTable, {
   AdminDataTableColumn,
   AdminDataTableHandles,
 } from "@/components/core/dataTable/AdminDataTable";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Button } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { useRef } from "react";
@@ -16,6 +17,7 @@ export const ProfileList = (props: Props) => {
   const tableRef = useRef<AdminDataTableHandles>(null);
   // const { data, isRetrieving, refetch } = useProfileListData({});
   const { data } = useSuspenseQuery(roleQueryOptions);
+  const { data: tokenData } = useQuery(checkTokenQueryOptions);
 
   const handleExportClick = () => {
     if (tableRef.current) {
@@ -34,7 +36,7 @@ export const ProfileList = (props: Props) => {
         ref={tableRef}
         bordered
         rowKey={"id"}
-        columns={buildProfileListColumns(data ?? []) as AdminDataTableColumn<AnyObject>[]}
+        columns={buildProfileListColumns(tokenData?.user) as AdminDataTableColumn<AnyObject>[]}
         size="small"
         pagination={{
           defaultPageSize: 50,

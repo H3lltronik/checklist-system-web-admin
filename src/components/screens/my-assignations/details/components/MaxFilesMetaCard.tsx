@@ -15,6 +15,17 @@ export const MaxFilesMetaCard = ({ item }: { item: ParsedChecklistItem }) => {
           }
         />
       )}
+      {item.minFiles && (
+        <Card.Meta
+          className="pt-2"
+          description={
+            <p>
+              <strong>Min archivos: </strong>
+              <i>{item.minFiles} archivo(s)</i>
+            </p>
+          }
+        />
+      )}
     </>
   );
 };

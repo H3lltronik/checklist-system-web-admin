@@ -61,11 +61,13 @@ export const SideMenu = (props: SideMenuProps) => {
       }}
     >
       <div className="logo bg-white px-2 py-2 h-[72px]">
-        <img
-          className="object-contain h-full w-full"
-          src={Logo}
-          alt=""
-        />
+        <Link to="/">
+          <img
+            className="object-contain h-full w-full"
+            src={Logo}
+            alt=""
+          />
+        </Link>
       </div>
       <Button
         className="!w-full mb-5 rounded-none"
@@ -86,19 +88,21 @@ export const SideMenu = (props: SideMenuProps) => {
         openKeys={openKeys}
         onOpenChange={setOpenKeys}
       >
-        <Menu.ItemGroup
-          key="g1"
-          title={
-            <>
-              <SettingOutlined className="mr-2" /> Mi panel
-            </>
-          }
-        >
-          <Menu.Item key="/admin/my-assignations" icon={<LoginOutlined />}>
-            <Link to="/admin/my-assignations">Mis asignaciones</Link>
-          </Menu.Item>
-        </Menu.ItemGroup>
-        <Can ability={ability as AnyAbility} I={Action.Manage} a={Subjects.All}>
+        <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.ScreenMyAssignations}>
+          <Menu.ItemGroup
+            key="g1"
+            title={
+              <>
+                <SettingOutlined className="mr-2" /> Mi panel
+              </>
+            }
+          >
+            <Menu.Item key="/admin/my-assignations" icon={<LoginOutlined />}>
+              <Link to="/admin/my-assignations">Mis asignaciones</Link>
+            </Menu.Item>
+          </Menu.ItemGroup>
+        </Can>
+        <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.MenuAdminSection}>
           <Menu.ItemGroup
             key="g2"
             title={
@@ -107,7 +111,7 @@ export const SideMenu = (props: SideMenuProps) => {
               </>
             }
           >
-            <Can ability={ability as AnyAbility} I={Action.Manage} a={Subjects.Assignations}>
+            <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.ScreenAdminAssignationList}>
               <Menu.Item
                 className="!pl-[24px]"
                 key="/admin/assignations"
@@ -116,7 +120,7 @@ export const SideMenu = (props: SideMenuProps) => {
                 <Link to="/admin/assignations">Asignación</Link>
               </Menu.Item>
             </Can>
-            <Can ability={ability as AnyAbility} I={Action.Manage} a={Subjects.FileChecklist}>
+            <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.ScreenAdminFileChecklistList}>
               <Menu.Item
                 className="!pl-[24px]"
                 key="/admin/file-checklist"
@@ -125,7 +129,7 @@ export const SideMenu = (props: SideMenuProps) => {
                 <Link to="/admin/file-checklist">Requerimientos</Link>
               </Menu.Item>
             </Can>
-            <Can ability={ability as AnyAbility} I={Action.Manage} a={Subjects.Enterprise}>
+            <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.ScreenAdminEnterpriseList}>
               <Menu.Item
                 className="!pl-[24px]"
                 key="/admin/enterprises"
@@ -136,7 +140,7 @@ export const SideMenu = (props: SideMenuProps) => {
             </Can>
           </Menu.ItemGroup>
         </Can>
-        <Can ability={ability as AnyAbility} I={Action.Manage} a={Subjects.All}>
+        <Can ability={ability as AnyAbility} I={Action.Read} a={Subjects.MenuAdminSecuritySection}>
           <Menu.ItemGroup
             key="s1"
             title={

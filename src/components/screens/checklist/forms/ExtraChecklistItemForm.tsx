@@ -1,6 +1,7 @@
 // ExtraChecklistItemForm.tsx
-import { FileChecklist } from "@/@types/api/entities";
+import type { FileChecklist } from "@/@types/api/entities";
 import { QueryKeys } from "@/@types/queries";
+import { SizeSuffix } from "@/@types/sizes";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
 import { Form, Input, Switch } from "antd";
@@ -39,7 +40,8 @@ const ExtraChecklistItemForm = forwardRef<ExtraChecklistItemFormHandle, Props>((
           description: checklist?.description ?? "",
           allowMultiple: checklist?.allowMultiple ?? false,
           maxFiles: checklist?.maxFiles,
-          maxSizeInBytes: checklist?.maxSizeInBytes ?? 0,
+          maxSize: checklist?.maxSize ?? 0,
+          sizeSuffix: checklist?.sizeSuffix ?? SizeSuffix.BYTES,
           allowedMimeTypes: checklist?.allowedMimeTypes ?? [],
         };
       },
@@ -91,6 +93,10 @@ const ExtraChecklistItemForm = forwardRef<ExtraChecklistItemFormHandle, Props>((
                   simpleFindAll: {
                     queryKey: [QueryKeys.FILE_CHECKLIST_LIST, "assignationId", String(props.fileChecklistId)],
                     endpoint: `/api/checklist-item/by-file-checklist/${props.fileChecklistId}`,
+                    searchOptions: {
+                      keys: ["title"],
+                      threshold: 0.3,
+                    }
                   },
                 }}
               />

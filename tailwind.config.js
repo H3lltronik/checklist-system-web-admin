@@ -5,6 +5,8 @@ export default {
     extend: {
       colors: {
         "brown-guerrero": "#AD915E",
+        "red-apoyando": "#E51937",
+        "blue-apoyando": "#1E3C58",
       },
     },
   },

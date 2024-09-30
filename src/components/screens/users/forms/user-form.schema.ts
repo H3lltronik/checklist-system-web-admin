@@ -11,6 +11,31 @@ interface UserFormFields {
   enterpriseId: string;
 }
 
+const passwordPolicyValidator = (password: string) => {
+  const minLength = 8;
+  const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+  if (password.length < minLength) {
+    return "La contraseña debe tener al menos 8 caracteres.";
+  }
+  if (!hasUpperCase) {
+    return "La contraseña debe contener al menos una letra mayúscula.";
+  }
+  if (!hasLowerCase) {
+    return "La contraseña debe contener al menos una letra minúscula.";
+  }
+  if (!hasNumber) {
+    return "La contraseña debe contener al menos un número.";
+  }
+  if (!hasSymbol) {
+    return "La contraseña debe contener al menos un carácter especial.";
+  }
+  return null;
+};
+
 const userFormRules: FormRules<UserFormFields> = {
   name: [
     {
@@ -34,8 +59,16 @@ const userFormRules: FormRules<UserFormFields> = {
       message: "Este campo es requerido",
     },
     {
-      min: 6,
-      message: "La contraseña debe tener al menos 6 caracteres",
+      validator(_, value) {
+        if (!value) {
+          return Promise.resolve();
+        }
+        const errorMessage = passwordPolicyValidator(value);
+        if (errorMessage) {
+          return Promise.reject(new Error(errorMessage));
+        }
+        return Promise.resolve();
+      },
     },
   ],
   confirmPassword: [
@@ -81,8 +114,9 @@ export const buildUserFormRules = (params: { editMode: boolean, permissions?: Us
             if (!value) {
               return Promise.resolve();
             }
-            if (value.length < 6) {
-              return Promise.reject(new Error("La contraseña debe tener al menos 6 caracteres"));
+            const errorMessage = passwordPolicyValidator(value);
+            if (errorMessage) {
+              return Promise.reject(new Error(errorMessage));
             }
             return Promise.resolve();
           },
@@ -96,7 +130,7 @@ export const buildUserFormRules = (params: { editMode: boolean, permissions?: Us
               return Promise.resolve();
             }
 
-            if (value !== password && !ability.can(Action.Manage, Subjects.All)) {
+            if (value !== password && !ability.can(Action.Manage, Subjects.ScreenAll)) {
               return Promise.reject(new Error("Las contraseñas no coinciden"));
             }
             return Promise.resolve();

@@ -2,12 +2,13 @@ import AdminDataTable, {
   AdminDataTableColumn,
   AdminDataTableHandles,
 } from "@/components/core/dataTable/AdminDataTable";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Button } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { useRef } from "react";
 import { checklistQueryOptions } from "../checklist-queries";
 import { buildChecklistListColumns } from "./columns";
+import { checkTokenQueryOptions } from "@/auth";
 
 type Props = {
   header?: React.ReactNode;
@@ -15,6 +16,7 @@ type Props = {
 export const ChecklistList = (props: Props) => {
   const tableRef = useRef<AdminDataTableHandles>(null);
   const { data } = useSuspenseQuery(checklistQueryOptions);
+  const { data: tokenData } = useQuery(checkTokenQueryOptions);
 
   const handleExportClick = () => {
     if (tableRef.current) {
@@ -33,7 +35,7 @@ export const ChecklistList = (props: Props) => {
         ref={tableRef}
         bordered
         rowKey={"id"}
-        columns={buildChecklistListColumns(data?.data ?? []) as AdminDataTableColumn<AnyObject>[]}
+        columns={buildChecklistListColumns(tokenData?.user) as AdminDataTableColumn<AnyObject>[]}
         size="small"
         pagination={{
           defaultPageSize: 50,

@@ -5,7 +5,7 @@ import { checkTokenQueryOptions } from "@/auth";
 import { ApiSelect } from "@/components/core/forms/common/ApiSelect";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
 import { useQuery } from "@tanstack/react-query";
-import { Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row, Switch } from "antd";
 import { forwardRef, useImperativeHandle } from "react";
 import EnterpriseList from "./EnterpriseListSelector";
 import { buildUserFormRules } from "./user-form.schema";
@@ -20,6 +20,8 @@ export type UserFormHandle = FormRefHandle<UserFormBody, UserFormReturns>;
 export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
   const [form] = Form.useForm();
   const { data } = useQuery(checkTokenQueryOptions);
+
+  const hasPassword = Form.useWatch(["credential", "hasPassword"], form);
 
   const userFormRules = buildUserFormRules({
     editMode: props.editMode || false,
@@ -45,7 +47,8 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
 
   return (
     <div className="">
-      <Form form={form} layout="vertical">
+      hasPassword: {hasPassword?.toString()}
+      <Form form={form} layout="vertical" initialValues={{ credential: { hasPassword: true } }}>
         <Form.Item<User> name="id" hidden>
           <Input />
         </Form.Item>
@@ -74,24 +77,6 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
               </Col>
               <Col span={6}>
                 <Form.Item<UserFormReturns>
-                  name={["credential", "password"]}
-                  label="Contraseña"
-                  rules={userFormRules.password}
-                >
-                  <Input.Password placeholder="Contraseña" />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item<UserFormReturns>
-                  name={["credential", "repeatPassword"]}
-                  label="Repetir contraseña"
-                  rules={userFormRules.confirmPassword}
-                >
-                  <Input.Password placeholder="Repite la contraseña" type="password" />
-                </Form.Item>
-              </Col>
-              <Col span={6}>
-                <Form.Item<UserFormReturns>
                   name={["credential", "roleId"]}
                   label="Perfil"
                   rules={userFormRules.roleId}
@@ -106,12 +91,64 @@ export const UserForm = forwardRef<UserFormHandle, Props>((props, ref) => {
                       simpleFindAll: {
                         endpoint: "/api/role",
                         queryKey: [QueryKeys.ROLE_LIST],
+                        searchOptions: {
+                          keys: ["name"],
+                          threshold: 0.3
+                        }
                       }
                     }}
                   />
                 </Form.Item>
               </Col>
             </Row>
+            <Row>
+              <Col span={6}>
+                <Form.Item<UserFormReturns>
+                  name={["credential", "hasPassword"]}
+                  label="Habilitar contraseña"
+                  tooltip="Al desactivar esta opcion, cada vez que este usuario inicie sesion, se le pedira acceso con OTP (One-Time-Password) por correo electronico"
+                >
+                  <Switch />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            {
+              hasPassword &&
+              <>
+                <Row>
+                  <Col span={6}>
+                    <Form.Item<UserFormReturns>
+                      name={["credential", "mfaEnabled"]}
+                      label="Requerir autenticación de dos factores"
+                      tooltip="Requerir autenticación de dos factores para este usuario"
+                    >
+                      <Switch />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={6}>
+                    <Form.Item<UserFormReturns>
+                      name={["credential", "password"]}
+                      label="Contraseña"
+                      rules={userFormRules.password}
+                    >
+                      <Input.Password placeholder="Contraseña" />
+                    </Form.Item>
+                  </Col>
+                  <Col span={6}>
+                    <Form.Item<UserFormReturns>
+                      name={["credential", "repeatPassword"]}
+                      label="Repetir contraseña"
+                      rules={userFormRules.confirmPassword}
+                    >
+                      <Input.Password placeholder="Repite la contraseña" type="password" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </>
+            }
           </Col>
 
           <Col span={24} className="bg-slate-200 p-5">
@@ -131,8 +168,10 @@ export type UserFormBody = {
   enterprises: number[];
   credential: {
     email: string;
-    password: string;
-    repeatPassword: string;
+    password?: string;
+    repeatPassword?: string;
+    hasPassword: boolean;
+    mfaEnabled: boolean;
     roleId: number;
   };
 };
@@ -147,8 +186,10 @@ export type UserFormReturns = {
   credential: {
     id?: number;
     email: string;
-    password: string;
-    repeatPassword: string;
+    hasPassword: boolean;
+    password?: string;
+    repeatPassword?: string;
+    mfaEnabled: boolean;
     roleId: number;
   };
 };

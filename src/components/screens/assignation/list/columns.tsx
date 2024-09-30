@@ -1,6 +1,8 @@
-import { Assignation, FileChecklist } from "@/@types/api/entities";
+import { Assignation } from "@/@types/api/entities";
+import { UserPermissions } from "@/@types/auth";
 import { ColumnDataTypes } from "@/@types/excel";
 import { QueryKeys } from "@/@types/queries";
+import { Action, Subjects } from "@/abilities";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
@@ -10,8 +12,12 @@ import { deleteAssignation } from "../api";
 
 export interface AssignationListTableRow extends Assignation {}
 
-const actionColumns = createActionsColumn<AssignationListTableRow>({
+const buildActionColumns = (permissions: UserPermissions) => createActionsColumn<AssignationListTableRow>({
   view: {
+    permission: {
+      subject: Subjects.ScreenAdminAssignationDetails,
+      action: Action.Read,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/file-checklist/",
@@ -21,6 +27,10 @@ const actionColumns = createActionsColumn<AssignationListTableRow>({
     },
   },
   delete: {
+    permission: {
+      subject: Subjects.ScreenAdminAssignationList,
+      action: Action.Delete,
+    },
     onClick: async (record) => {
       deleteConfirm({
         title: "Eliminar asignación",
@@ -32,6 +42,10 @@ const actionColumns = createActionsColumn<AssignationListTableRow>({
     },
   },
   edit: {
+    permission: {
+      subject: Subjects.ScreenAdminAssignationList,
+      action: Action.Update,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/assignations",
@@ -40,11 +54,10 @@ const actionColumns = createActionsColumn<AssignationListTableRow>({
       });
     },
   },
-});
+}, permissions);
 
 export const buildAssignationListColumns = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _data: FileChecklist[],
+  permissions?: UserPermissions,
 ): AdminDataTableColumn<AssignationListTableRow>[] => {
   return [
     {
@@ -98,6 +111,6 @@ export const buildAssignationListColumns = (
         <div className="text-center">{record.enterprise?.email}</div>
       ),
     },
-    actionColumns as AdminDataTableColumn<AssignationListTableRow>,
+    ...(permissions ? [buildActionColumns(permissions) as AdminDataTableColumn<AssignationListTableRow>] : []),
   ];
 };

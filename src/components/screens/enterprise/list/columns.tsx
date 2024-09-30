@@ -1,6 +1,8 @@
-import { Enterprise, FileChecklist } from "@/@types/api/entities";
+import { Enterprise } from "@/@types/api/entities";
+import { UserPermissions } from "@/@types/auth";
 import { ColumnDataTypes } from "@/@types/excel";
 import { QueryKeys } from "@/@types/queries";
+import { Action, Subjects } from "@/abilities";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
@@ -10,8 +12,12 @@ import { deleteEnterprise } from "../api";
 
 export interface EnterpriseListTableRow extends Enterprise {}
 
-const actionColumns = createActionsColumn<EnterpriseListTableRow>({
+const buildActionColumns = (permissions: UserPermissions) => createActionsColumn<EnterpriseListTableRow>({
   view: {
+    permission: {
+      subject: Subjects.ScreenAdminEnterpriseDetails,
+      action: Action.Read,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/enterprises/",
@@ -21,6 +27,10 @@ const actionColumns = createActionsColumn<EnterpriseListTableRow>({
     },
   },
   delete: {
+    permission: {
+      subject: Subjects.ScreenAdminEnterpriseList,
+      action: Action.Delete,
+    },
     onClick: async (record) => {
       deleteConfirm({
         title: "Eliminar empresa",
@@ -32,6 +42,10 @@ const actionColumns = createActionsColumn<EnterpriseListTableRow>({
     },
   },
   edit: {
+    permission: {
+      subject: Subjects.ScreenAdminEnterpriseList,
+      action: Action.Update,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/enterprises",
@@ -40,11 +54,10 @@ const actionColumns = createActionsColumn<EnterpriseListTableRow>({
       });
     },
   },
-});
+}, permissions);
 
 export const buildEnterpriseListColumns = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _data: FileChecklist[],
+  permissions?: UserPermissions,
 ): AdminDataTableColumn<EnterpriseListTableRow>[] => {
   return [
     {
@@ -107,6 +120,6 @@ export const buildEnterpriseListColumns = (
         alphabetically(a.email, b.email),
       onFilter: (value, record: EnterpriseListTableRow) => record.email === value,
     },
-    actionColumns as AdminDataTableColumn<EnterpriseListTableRow>,
+    ...(permissions ? [buildActionColumns(permissions) as AdminDataTableColumn<EnterpriseListTableRow>] : []),
   ];
 };

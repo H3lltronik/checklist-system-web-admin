@@ -1,8 +1,9 @@
+import { checkTokenQueryOptions } from "@/auth";
 import AdminDataTable, {
   AdminDataTableColumn,
   AdminDataTableHandles,
 } from "@/components/core/dataTable/AdminDataTable";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Button } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { useRef } from "react";
@@ -15,6 +16,7 @@ type Props = {
 export const UserList = (props: Props) => {
   const tableRef = useRef<AdminDataTableHandles>(null);
   const { data } = useSuspenseQuery(userQueryOptions);
+  const { data: tokenData } = useQuery(checkTokenQueryOptions);
 
   const handleExportClick = () => {
     if (tableRef.current) {
@@ -33,8 +35,7 @@ export const UserList = (props: Props) => {
         ref={tableRef}
         bordered
         rowKey={"id"}
-        // @ts-expect-error TODO: fix this
-        columns={buildUserListColumns(data ?? []) as AdminDataTableColumn<AnyObject>[]}
+        columns={buildUserListColumns(tokenData?.user) as AdminDataTableColumn<AnyObject>[]}
         size="small"
         pagination={{
           defaultPageSize: 50,

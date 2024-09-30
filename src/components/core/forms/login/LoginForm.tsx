@@ -1,12 +1,15 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Form, Input } from "antd";
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import { loginFormRules } from "./login-form.schema";
 
-type LoginData = { username: string; password: string } | null;
+type LoginData = { username: string; password?: string } | null;
 
 export type LoginFormHandle = {
   getValidatedData: () => Promise<LoginData>;
+  showPassword: () => void;
+  hidePassword: () => void;
+  setEmail(email: string): void;
 };
 
 export type Props = {
@@ -15,6 +18,8 @@ export type Props = {
 
 const LoginForm = forwardRef<LoginFormHandle, Props>((props, ref) => {
   const [form] = Form.useForm();
+
+  const [showPassword, setShowPassword] = useState(false);
 
   useImperativeHandle(ref, () => ({
     async getValidatedData() {
@@ -26,11 +31,20 @@ const LoginForm = forwardRef<LoginFormHandle, Props>((props, ref) => {
         return null;
       }
     },
+    showPassword() {
+      setShowPassword(!showPassword);
+    },
+    hidePassword() {
+      setShowPassword(false);
+    },
+    setEmail(email: string) {
+      form.setFieldsValue({ username: email });
+    },
   }));
 
   const keyDownEnterSubmit = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      form.submit();
+      // form.submit();
     }
   };
 
@@ -50,13 +64,16 @@ const LoginForm = forwardRef<LoginFormHandle, Props>((props, ref) => {
         />
       </Form.Item>
 
-      <Form.Item name="password" rules={loginFormRules.password}>
-        <Input.Password
-          prefix={<LockOutlined className="text-blue-500" />}
-          type="password"
-          placeholder="Contraseña"
-        />
-      </Form.Item>
+      {
+        showPassword &&
+        <Form.Item name="password" rules={loginFormRules.password}>
+          <Input.Password
+            prefix={<LockOutlined className="text-blue-500" />}
+            type="password"
+            placeholder="Contraseña"
+          />
+        </Form.Item>
+      }
     </Form>
   );
 });

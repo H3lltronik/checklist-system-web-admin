@@ -1,14 +1,16 @@
 import { Assignation } from "@/@types/api/entities";
 import { ParsedChecklistItem } from "@/@types/common";
-import { bytesToSize } from "@/components/screens/my-assignations/details/lib";
+import { SizeSuffix } from "@/@types/sizes";
+import { bytesToSize, bytesWithSuffix } from "@/components/screens/my-assignations/details/lib";
 import { notification } from "antd";
 import Upload, { RcFile } from "antd/es/upload";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 type FileRulesToValidate = {
+  sizeSuffix?: SizeSuffix;
   maxFiles?: number;
-  maxSizeInBytes?: number;
+  maxSize?: number;
   allowedMimeTypes?: string[];
 };
 
@@ -30,9 +32,10 @@ export const buildAssignationFileValidation = (
       return false;
     }
 
+    const maxSize = bytesWithSuffix(params.maxSize ?? MAX_FILE_SIZE, params.sizeSuffix ?? SizeSuffix.BYTES);
     let isLt2M = true;
-    if (params.maxSizeInBytes !== undefined && params.maxSizeInBytes > 0)
-      isLt2M = file.size < params.maxSizeInBytes;
+    if (maxSize !== undefined && maxSize > 0)
+      isLt2M = file.size < maxSize;
 
     const allowedMimeTypes =
       params.allowedMimeTypes?.map((mimeType) => mimeType.toLowerCase()) ?? [];
@@ -48,7 +51,7 @@ export const buildAssignationFileValidation = (
     if (!isLt2M) {
       notification.info({
         message: "Archivo muy pesado",
-        description: `El archivo debe ser menor a ${bytesToSize(params.maxSizeInBytes ?? MAX_FILE_SIZE)}, el proporcionado es ${bytesToSize(file.size)}`,
+        description: `El archivo debe ser menor a ${maxSize} ${params.sizeSuffix}, el proporcionado es ${bytesToSize(file.size)}`,
       });
     }
     return isLt2M ? true : Upload.LIST_IGNORE;

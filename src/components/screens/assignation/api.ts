@@ -1,4 +1,5 @@
 import { GetAssignationListResponse, GetAssignationResponse } from "@/@types/api/assignation";
+import { SizeSuffix } from "@/@types/sizes";
 import { httpRequest } from "@/http/http-client";
 
 export const getAssignationList = async () => {
@@ -75,9 +76,9 @@ export interface AssignationPayload {
     title: string;
     description: string;
     allowMultiple: boolean;
-    maxSizeInBytes: number;
     allowedMimeTypes: string[];
     maxFiles?: number;
+    sizeSuffix?: SizeSuffix;
     assignationId?: number;
     overrideChecklistId?: number;
   }[];

@@ -1,6 +1,7 @@
-import { RoleListItem } from "@/@types/api/roles";
+import { UserPermissions } from "@/@types/auth";
 import { ColumnDataTypes } from "@/@types/excel";
 import { QueryKeys } from "@/@types/queries";
+import { Action, Subjects } from "@/abilities";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
@@ -16,8 +17,12 @@ export type ProfileListTableRow = {
   permissionsTxt: string;
 };
 
-const actionColumns = createActionsColumn<ProfileListTableRow>({
+const buildActionColumns = (permissions: UserPermissions) => createActionsColumn<ProfileListTableRow>({
   view: {
+    permission: {
+      subject: Subjects.ScreenAdminProfileDetails,
+      action: Action.Read,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/credentials/profiles",
@@ -33,6 +38,10 @@ const actionColumns = createActionsColumn<ProfileListTableRow>({
     },
   },
   delete: {
+    permission: {
+      subject: Subjects.ScreenAdminProfileList,
+      action: Action.Delete,
+    },
     onClick: async (record) => {
       deleteConfirm({
         title: "Eliminar permiso",
@@ -44,6 +53,10 @@ const actionColumns = createActionsColumn<ProfileListTableRow>({
     },
   },
   edit: {
+    permission: {
+      subject: Subjects.ScreenAdminProfileList,
+      action: Action.Update,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/credentials/profiles",
@@ -52,11 +65,10 @@ const actionColumns = createActionsColumn<ProfileListTableRow>({
       });
     },
   },
-});
+}, permissions);
 
 export const buildProfileListColumns = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _data: RoleListItem[],
+  permissions?: UserPermissions,
 ): AdminDataTableColumn<ProfileListTableRow>[] => {
   return [
     {
@@ -115,6 +127,6 @@ export const buildProfileListColumns = (
         </div>
       ),
     },
-    actionColumns as AdminDataTableColumn<ProfileListTableRow>,
+    ...(permissions ? [buildActionColumns(permissions) as AdminDataTableColumn<ProfileListTableRow>] : []),
   ];
 };

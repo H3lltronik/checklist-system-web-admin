@@ -1,6 +1,8 @@
-import { ChecklistItem, FileChecklist } from "@/@types/api/entities";
+import { ChecklistItem } from "@/@types/api/entities";
+import { UserPermissions } from "@/@types/auth";
 import { ColumnDataTypes } from "@/@types/excel";
 import { QueryKeys } from "@/@types/queries";
+import { Action, Subjects } from "@/abilities";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
@@ -15,8 +17,12 @@ export type ChecklistListTableRow = {
   checklistItems: ChecklistItem[];
 };
 
-const actionColumns = createActionsColumn<ChecklistListTableRow>({
+const buildActionColumns = (permissions: UserPermissions) => createActionsColumn<ChecklistListTableRow>({
   view: {
+    permission: {
+      subject: Subjects.ScreenAdminFileChecklistDetails,
+      action: Action.Read,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/file-checklist/",
@@ -26,6 +32,10 @@ const actionColumns = createActionsColumn<ChecklistListTableRow>({
     },
   },
   delete: {
+    permission: {
+      subject: Subjects.ScreenAdminFileChecklistList,
+      action: Action.Delete,
+    },
     onClick: async (record) => {
       deleteConfirm({
         title: "Eliminar checklist",
@@ -37,6 +47,10 @@ const actionColumns = createActionsColumn<ChecklistListTableRow>({
     },
   },
   edit: {
+    permission: {
+      subject: Subjects.ScreenAdminFileChecklistList,
+      action: Action.Update,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/file-checklist/",
@@ -45,11 +59,10 @@ const actionColumns = createActionsColumn<ChecklistListTableRow>({
       });
     },
   },
-});
+}, permissions);
 
 export const buildChecklistListColumns = (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _data: FileChecklist[],
+  permissions?: UserPermissions,
 ): AdminDataTableColumn<ChecklistListTableRow>[] => {
   return [
     {
@@ -98,6 +111,6 @@ export const buildChecklistListColumns = (
         alphabetically(a.description, b.description),
       onFilter: (value, record: ChecklistListTableRow) => record.description === value,
     },
-    actionColumns as AdminDataTableColumn<ChecklistListTableRow>,
+    ...(permissions ? [buildActionColumns(permissions) as AdminDataTableColumn<ChecklistListTableRow>] : []),
   ];
 };

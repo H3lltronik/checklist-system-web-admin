@@ -1,9 +1,10 @@
+import { checkTokenQueryOptions } from "@/auth";
 import AdminDataTable, {
   AdminDataTableColumn,
   AdminDataTableHandles,
 } from "@/components/core/dataTable/AdminDataTable";
 import { formatNumerWithCommas } from "@/lib/utils/formatters";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Button, Input } from "antd";
 import { AnyObject } from "antd/es/_util/type";
 import { useRef, useState } from "react";
@@ -15,6 +16,7 @@ type Props = {
 };
 export const EnterpriseList = (props: Props) => {
   const tableRef = useRef<AdminDataTableHandles>(null);
+  const { data: tokenData } = useQuery(checkTokenQueryOptions);
 
   const [pagination, setPagination] = useState<{ current: number; pageSize: number, limit?: number }>({
     current: 1,
@@ -67,8 +69,7 @@ export const EnterpriseList = (props: Props) => {
           showTotal: (total) => `Total ${formatNumerWithCommas(total)} registros`,
         }}
         rowKey={"id"}
-        // @ts-expect-error TODO: fix this
-        columns={buildEnterpriseListColumns(data?.data ?? []) as AdminDataTableColumn<AnyObject>[]}
+        columns={buildEnterpriseListColumns(tokenData?.user) as AdminDataTableColumn<AnyObject>[]}
         size="small"
         onChange={handleTableChange}
         data={data?.data ?? []}

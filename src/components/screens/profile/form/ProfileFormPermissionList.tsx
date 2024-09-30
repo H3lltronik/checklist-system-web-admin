@@ -17,7 +17,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
             <Col span={6} key={key}>
               <Card
                 size="small"
-                title="Permiso"
+                title={<div className="text-left">Permiso</div>}
                 style={{ marginBottom: 16 }}
                 extra={
                   <Button
@@ -47,9 +47,19 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                           simpleFindAll: {
                             endpoint: "/api/auth/subject",
                             queryKey: [QueryKeys.SUBJECT_LIST],
-                            staleTime: Infinity
+                            staleTime: Infinity,
+                            searchOptions: {
+                              keys: ["name", "descriptions.es"],
+                              threshold: 0.3
+                            }
                           }
                         }}
+                        optionRenderer={(item) => (
+                          <div className="">
+                            <strong>{item.name} - </strong>
+                            <span>{item.descriptions.es}</span>
+                          </div>
+                        )}
                       />
                     </Form.Item>
                   </Col>
@@ -61,6 +71,7 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                       rules={[{ required: true, message: "Seleccione un action" }]}
                     >
                       <ApiSelect<Action[], Action>
+                        className="!h-[24]"
                         itemExtractor={(data) => data}
                         keyExtractor={(item) => item.id}
                         labelExtractor={(item) => item.name}
@@ -70,9 +81,19 @@ export const ProfileFormPermissionList: React.FC<ProfileFormPermissionListProps>
                           simpleFindAll: {
                             endpoint: "/api/auth/action",
                             queryKey: [QueryKeys.ACTION_LIST],
-                            staleTime: Infinity
+                            staleTime: Infinity,
+                            searchOptions: {
+                              keys: ["name", "descriptions.es"],
+                              threshold: 0.3
                             }
+                          }
                         }}
+                        optionRenderer={(item) => (
+                          <div className="">
+                            <strong>{item.name} - </strong>
+                            <span>{item.descriptions.es}</span>
+                          </div>
+                        )}
                       />
                     </Form.Item>
                   </Col>

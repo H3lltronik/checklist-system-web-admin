@@ -52,7 +52,8 @@ export const UploadSection = (props: UploadSectionProps) => {
     }
 
     const validationRules = {
-      maxSizeInBytes: props.item.maxSizeInBytes,
+      maxSize: props.item.maxSize,
+      sizeSuffix: props.item.sizeSuffix,
       allowedMimeTypes: props.item.allowedMimeTypes,
       maxFiles: props.item.maxFiles,
     };

@@ -9,11 +9,13 @@ export const QueryKeys = {
   FILE_CHECKLIST_LIST: "file_checklist_list",
   AUTH_QUERY_KEY: "auth_token",
   AUTH_STATUS_QUERY_KEY: "auth_token_status",
+  CHECK_HAS_PASSWORD: "has_password",
   PERIODS: "periods",
 } as const;
 
 export const MutationKeys = {
   FILE_UPLOAD: "file_upload",
+  AUTH_VERIFY_MFA: "auth_verify_mfa",
 }
 
 export type AppQueries = (typeof QueryKeys)[keyof typeof QueryKeys];

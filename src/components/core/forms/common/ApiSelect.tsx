@@ -1,11 +1,11 @@
+import { FuseOptionsWithKeys } from "@/@types/common";
 import { RedoOutlined } from "@ant-design/icons";
 import { useQuery } from "@tanstack/react-query";
-import { AutoComplete, Button, Select, Tooltip } from "antd";
+import { AutoComplete, Button, Tooltip } from "antd";
 import debounce from "lodash.debounce";
 import qs from "qs";
 import React, { useCallback, useEffect, useState } from "react";
-
-const { Option } = Select;
+import FilterableSelect from "./FilterableSelect";
 
 /**
  * Props for the `ApiSelect` component.
@@ -13,7 +13,7 @@ const { Option } = Select;
  * @template T The type of the data fetched from the API.
  * @template U The type of each item extracted from the fetched data.
  */
-interface ApiSelectProps<T, U> {
+interface ApiSelectProps<T, U extends object> {
   /**
    * CSS class name for the select component.
    */
@@ -23,6 +23,22 @@ interface ApiSelectProps<T, U> {
    * Placeholder text for the select component.
    */
   placeholder?: string;
+
+  /**
+   * Function to render the dropdown menu.
+   * 
+   * @param data - The fetched data from which to extract items.
+   * @returns The rendered dropdown menu.
+   */
+  dropdownRender?: (menu: React.ReactElement) => React.ReactElement;
+
+  /**
+   * Function to render the dropdown option.
+   * 
+   * @param item - An individual item from which to extract the label.
+   * @returns The rendered dropdown option.
+   */
+  dropdownOptionRenderer?: (item: U) => React.ReactNode;
 
   /**
    * Function to extract an array of items from the fetched data.
@@ -113,6 +129,13 @@ interface ApiSelectProps<T, U> {
        * If true, enables the use of the `enabled` prop for the query function.
        */
       enabled?: boolean;
+
+      /**
+     * ONLY AVAILABLE FOR SIMPLE FIND ALL.
+     * 
+     * Fuse.js options for fuzzy search.
+     */
+      searchOptions: FuseOptionsWithKeys<U>;
     };
 
     /**
@@ -191,7 +214,7 @@ async function fetchItems<T>(endpoint: string): Promise<T> {
   return response.json();
 }
 
-export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
+export const ApiSelect = <T, U extends object>(props: ApiSelectProps<T, U>) => {
   const [inputValue, setInputValue] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [, setSelectedItem] = useState<U | null>(null);
@@ -260,10 +283,10 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
     searchTerm && searchQuery.data
       ? props.itemExtractor(searchQuery.data)
       : !searchTerm && initialFetchQuery.data
-      ? props.itemExtractor(initialFetchQuery.data)
-      : simpleQuery.data
-      ? props.itemExtractor(simpleQuery.data)
-      : [];
+        ? props.itemExtractor(initialFetchQuery.data)
+        : simpleQuery.data
+          ? props.itemExtractor(simpleQuery.data)
+          : [];
 
   const refetch = () => {
     simpleQuery.refetch();
@@ -274,29 +297,15 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
   const simpleLoading = simpleQuery.isLoading || simpleQuery.isFetching || simpleQuery.isRefetching;
   const searchLoading = searchQuery.isLoading || searchQuery.isFetching || searchQuery.isRefetching;
 
-  const renderOptions = () => {
-    return items?.map((item) =>
-      props.optionRenderer ? (
-        <Option key={props.keyExtractor(item)} value={props.valueExtractor(item)}>
-          {props.optionRenderer(item)}
-        </Option>
-      ) : (
-        <Option key={props.keyExtractor(item)} value={props.valueExtractor(item)}>
-          {props.labelExtractor(item)}
-        </Option>
-      )
-    );
-  };
-
   const defaultPlaceholder = props.endpoints.search ? "Escribe algo para comenzar a buscar..." : "Seleccionar";
 
   return search ? (
     <AutoComplete
       disabled={props.disabled}
-      value={inputValue} // Usar inputValue para mostrar en el input
+      value={inputValue}
       className={props.className}
-      onChange={handleInputChange} // Usar handleInputChange para actualizar inputValue y searchTerm
-      onSelect={handleSelect} // Manejar la selección del valor
+      onChange={handleInputChange}
+      onSelect={handleSelect}
       backfill
       placeholder={props.placeholder ?? defaultPlaceholder}
       options={items?.map((item) => ({
@@ -304,19 +313,23 @@ export const ApiSelect = <T, U>(props: ApiSelectProps<T, U>) => {
         label: props.optionRenderer ? props.optionRenderer(item) : props.labelExtractor(item),
       }))}
       suffixIcon={<RefreshButton loading={searchLoading} onRefresh={refetch} />}
+      dropdownRender={props.dropdownRender}
     />
   ) : (
-    <Select
+    <FilterableSelect<U>
       disabled={props.disabled}
       value={props.value}
       className={props.className}
       onChange={props.onChange}
-      showSearch={false}
-      loading={simpleLoading}
-      suffixIcon={<RefreshButton loading={simpleQuery.isLoading} onRefresh={refetch} />}
-    >
-      {renderOptions()}
-    </Select>
+      placeholder={props.placeholder ?? defaultPlaceholder}
+      labelExtractor={props.labelExtractor}
+      valueExtractor={props.valueExtractor}
+      keyExtractor={props.keyExtractor}
+      optionRenderer={props.optionRenderer}
+      fuseOptions={props.endpoints.simpleFindAll?.searchOptions}
+      suffixIcon={<RefreshButton loading={simpleLoading} onRefresh={refetch} />}
+      dropdownOptionRenderer={props.dropdownOptionRenderer}
+      options={items || []} />
   );
 };
 

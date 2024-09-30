@@ -1,8 +1,10 @@
 // ChecklistItemForm.tsx
+import { ChecklistItem } from "@/@types/api/entities";
 import { FileSizeSuffix } from "@/@types/common";
+import { SizeSuffix, SizeSuffixWLabels } from "@/@types/sizes";
 import { FormRefHandle } from "@/components/core/forms/common/FormList";
 import { Form, Input, Select } from "antd";
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 
 const { Option } = Select;
 
@@ -15,27 +17,18 @@ export type ChecklistItemFormHandle = FormRefHandle<ChecklistItemFormBody>;
 // @ts-expect-error props not used
 const ChecklistItemForm = forwardRef<ChecklistItemFormHandle, Props>((props, ref) => {
   const [form] = Form.useForm();
-  const [fileSizeSuffix, setFileSizeSuffix] = useState<FileSizeSuffix>("bytes");
 
   useImperativeHandle(
     ref,
     (): ChecklistItemFormHandle => ({
       getFormData: async () => {
         const values = await form.validateFields();
-        const factor: Record<FileSizeSuffix, number> = {
-          bytes: 1,
-          KB: 1024,
-          MB: 1024 ** 2,
-          GB: 1024 ** 3,
-        };
-        const fileSizeBytes = values.maxSizeInBytes
-          ? Number(values.maxSizeInBytes) * factor[fileSizeSuffix]
-          : undefined;
 
         return {
           ...values,
           maxFiles: values.maxFiles ? Number(values.maxFiles) : undefined,
-          maxSizeInBytes: fileSizeBytes,
+          minFiles: values.minFiles ? Number(values.minFiles) : undefined,
+          maxSize: values.maxSize ? Number(values.maxSize) : undefined,
         };
       },
       setFormData: (data) => {
@@ -47,35 +40,48 @@ const ChecklistItemForm = forwardRef<ChecklistItemFormHandle, Props>((props, ref
   return (
     <>
       <Form form={form} initialValues={{ allowMultiple: false }}>
-        <Form.Item name="id" hidden>
+        <Form.Item<ChecklistItem> name="id" hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item name="title" label="Title" rules={[{ required: true }]}>
-          <Input placeholder="Title" />
+        <Form.Item<ChecklistItem> name="title" label="Titulo" rules={[{ required: true }]}>
+          <Input placeholder="Ej. Comprobante de domicilio" />
         </Form.Item>
 
-        <Form.Item name="description" label="Description" rules={[{ required: true }]}>
-          <Input placeholder="Description" />
+        <Form.Item<ChecklistItem> name="description" label="Descripcion" rules={[{ required: true }]}>
+          <Input placeholder="Ej. Cargar comprobante de domicilio con no mas de 3 meses atras" />
         </Form.Item>
 
-        <Form.Item name="maxFiles" label="Maximum Files">
-          <Input type="number" placeholder="Maximum number of files" />
+        <Form.Item<ChecklistItem> name="maxFiles" label="Cantidad maxima de archivos" tooltip="Indica la cantidad de archivos maxima permitida para resolver este requerimiento">
+          <Input type="number" placeholder="3" />
         </Form.Item>
 
-        <Form.Item name="maxSizeInBytes" label="Maximum Size in Bytes">
-          <Input
-            type="number"
-            placeholder="Maximum file size in bytes"
-            addonAfter={<SuffixSelector onChange={setFileSizeSuffix} />}
-          />
+        <Form.Item<ChecklistItem> name="minFiles" label="Cantidad minima de archivos" tooltip="Indica la cantidad de archivos minima para resolver este requerimiento">
+          <Input type="number" placeholder="3" />
         </Form.Item>
 
-        <Form.Item name="allowedMimeTypes" label="Allowed MIME Types">
+        <Form.Item label="Tamaño máximo de archivo">
+          <Input.Group compact>
+            <Form.Item name="maxSize" noStyle>
+              <Input type="number" placeholder="1024" style={{ width: '60%' }} />
+            </Form.Item>
+            <Form.Item name="sizeSuffix" noStyle>
+              <Select<FileSizeSuffix> defaultValue="bytes" style={{ width: '40%' }}>
+                {Object.entries(SizeSuffixWLabels).map(([value, label]) => (
+                  <Option key={value} value={value}>
+                    {label}
+                  </Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Input.Group>
+        </Form.Item>
+
+        <Form.Item<ChecklistItem> name="allowedMimeTypes" label="Tipos de archivo permitidos">
           <Select
             mode="multiple"
             allowClear
-            placeholder="Select allowed MIME types"
+            placeholder="Ej. image/jpeg, image/png, application/pdf"
             style={{ width: "100%" }}
           >
             {commonMimeTypes.map((mimeType) => (
@@ -89,23 +95,6 @@ const ChecklistItemForm = forwardRef<ChecklistItemFormHandle, Props>((props, ref
     </>
   );
 });
-
-type SuffixSelectorProps = {
-  onChange?: (value: FileSizeSuffix) => void;
-};
-const SuffixSelector = (props: SuffixSelectorProps) => (
-  <Select<FileSizeSuffix>
-    defaultValue="bytes"
-    className="w-[80px]"
-    onChange={props.onChange}
-    disabled
-  >
-    <Select.Option value="bytes">B</Select.Option>
-    <Select.Option value="KB">KB</Select.Option>
-    <Select.Option value="MB">MB</Select.Option>
-    <Select.Option value="GB">GB</Select.Option>
-  </Select>
-);
 
 const commonMimeTypes = [
   { label: "Image (JPEG)", value: "image/jpeg" },
@@ -126,7 +115,8 @@ export type ChecklistItemFormBody = {
   description: string;
   allowMultiple: boolean;
   maxFiles?: number;
-  maxSizeInBytes: number;
+  maxSize: number;
+  sizeSuffix?: SizeSuffix;
   allowedMimeTypes: string[];
 };
 

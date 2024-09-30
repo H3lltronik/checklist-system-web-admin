@@ -6,7 +6,7 @@ interface ChecklistItem {
   title: string;
   description: string;
   maxFiles?: number | null;
-  maxSizeInBytes?: number | null;
+  maxSize?: number | null;
   allowedMimeTypes: string[];
 }
 
@@ -27,7 +27,7 @@ const ChecklistItemDetails: React.FC<ChecklistItemDetailsProps> = ({ item }) => 
       <Descriptions.Item label="Description">{item.description}</Descriptions.Item>
       <Descriptions.Item label="Max Files">{item.maxFiles || "Unlimited"}</Descriptions.Item>
       <Descriptions.Item label="Max Size In Bytes">
-        {item.maxSizeInBytes ? `${item.maxSizeInBytes} bytes` : "Unlimited"}
+        {item.maxSize ? `${item.maxSize} bytes` : "Unlimited"}
       </Descriptions.Item>
       <Descriptions.Item label="Allowed Mime Types">
         {item.allowedMimeTypes?.join(", ")}

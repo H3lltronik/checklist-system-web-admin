@@ -7,14 +7,24 @@ export type Permission = {
   roleId: number;
 };
 
+export type Locales = "en" | "es";
+
 export type Action = {
   id: number;
   name: string;
+  descriptions: Record<Locales, string>;
 };
+
+export enum SubjectType {
+  FRONTEND = "frontend",
+  BACKEND = "backend",
+}
 
 export type Subject = {
   id: number;
   name: string;
+  type: SubjectType;
+  descriptions: Record<Locales, string>;
 };
 
 export type Credential = {
@@ -23,6 +33,8 @@ export type Credential = {
   password: string;
   roleId: number;
   role: Role;
+  hasPassword: boolean;
+  mfaEnabled: boolean;
   permissions: Permission[];
 };
 
@@ -54,7 +66,9 @@ export interface ChecklistItem {
   description: string;
   allowMultiple: boolean;
   maxFiles: number;
-  maxSizeInBytes: number;
+  minFiles: number;
+  maxSize: number;
+  sizeSuffix: SizeSuffix;
   allowedMimeTypes: string[];
 }
 
@@ -64,7 +78,9 @@ export interface ExtraChecklistItem {
   description: string;
   allowMultiple: boolean;
   maxFiles: number;
-  maxSizeInBytes: number;
+  minFiles: number;
+  maxSize: number;
+  sizeSuffix: SizeSuffix;
   allowedMimeTypes: string[];
   assignationId: number;
   assignation: Assignation;

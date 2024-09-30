@@ -1,6 +1,8 @@
-import { FileChecklist, User } from "@/@types/api/entities";
+import { User } from "@/@types/api/entities";
+import { UserPermissions } from "@/@types/auth";
 import { ColumnDataTypes } from "@/@types/excel";
 import { QueryKeys } from "@/@types/queries";
+import { Action, Subjects } from "@/abilities";
 import { createActionsColumn } from "@/components/core/dataTable/actions/action-columns-builder";
 import { AdminDataTableColumn } from "@/components/core/dataTable/AdminDataTable";
 import { alphabetically } from "@/components/core/dataTable/utils/tableSorters";
@@ -8,10 +10,14 @@ import { deleteConfirm } from "@/http/delete-confirm";
 import { router } from "@/main";
 import { deleteUser } from "../data/api";
 
-export interface UserListTableRow extends User {}
+export interface UserListTableRow extends User { }
 
-const actionColumns = createActionsColumn<UserListTableRow>({
+const buildActionColumns = (permissions: UserPermissions) => createActionsColumn<UserListTableRow>({
   view: {
+    permission: {
+      subject: Subjects.ScreenAdminUsersDetails,
+      action: Action.Read,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/credentials/users",
@@ -21,6 +27,10 @@ const actionColumns = createActionsColumn<UserListTableRow>({
     },
   },
   delete: {
+    permission: {
+      subject: Subjects.ScreenAdminUsersList,
+      action: Action.Delete,
+    },
     onClick: async (record) => {
       deleteConfirm({
         title: "Eliminar usuario",
@@ -32,6 +42,10 @@ const actionColumns = createActionsColumn<UserListTableRow>({
     },
   },
   edit: {
+    permission: {
+      subject: Subjects.ScreenAdminUsersList,
+      action: Action.Update,
+    },
     onClick: (record) => {
       router.navigate({
         from: "/admin/credentials/users",
@@ -40,11 +54,11 @@ const actionColumns = createActionsColumn<UserListTableRow>({
       });
     },
   },
-});
+}, permissions);
 
 export const buildUserListColumns = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _data: FileChecklist[],
+  permissions?: UserPermissions,
 ): AdminDataTableColumn<UserListTableRow>[] => {
   return [
     {
@@ -71,12 +85,12 @@ export const buildUserListColumns = (
       width: "160px",
       align: "left",
       //   filters: uniqueRutaOptions,
-      render: (_, record) => record.credentials[0].role?.name,
+      render: (_, record) => record?.credentials[0]?.role?.name,
       filterSearch: true,
       sorter: (a: UserListTableRow, b: UserListTableRow) =>
         alphabetically(a.credentials[0].role?.name, b.credentials[0].role?.name),
       onFilter: (value, record: UserListTableRow) => record.credentials[0].role?.name === value,
     },
-    actionColumns as AdminDataTableColumn<UserListTableRow>,
+    ...(permissions ? [buildActionColumns(permissions) as AdminDataTableColumn<UserListTableRow>] : []),
   ];
 };

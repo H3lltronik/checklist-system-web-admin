@@ -1,3 +1,4 @@
+import { Subjects } from "@/abilities";
 import { ReactNode } from "react";
 
 export interface DefaultActionProps<T> {
@@ -16,6 +17,10 @@ export interface CustomAction<T> {
   tooltip?: string;
   onClick?: (record: T) => void;
   onHover?: (record: T) => void;
+  permission?: {
+    subject: Subjects;
+    action: Action;
+  }
 }
 
 export interface ActionsColumnConfig<T> {
