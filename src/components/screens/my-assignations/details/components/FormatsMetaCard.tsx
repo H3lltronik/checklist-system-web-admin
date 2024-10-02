@@ -1,7 +1,7 @@
-import { ParsedChecklistItem } from "@/@types/common";
 import { Card } from "antd";
+import { ChecklistItem } from "../../types";
 
-export const FormatsMetaCard = ({ item }: { item: ParsedChecklistItem }) => {
+export const FormatsMetaCard = ({ item }: { item: ChecklistItem }) => {
   return (
     <>
       {item.allowedMimeTypes?.length > 0 && (

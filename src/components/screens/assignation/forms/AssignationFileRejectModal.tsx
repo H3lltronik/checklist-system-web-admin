@@ -1,8 +1,7 @@
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
 import { Form, Input, Modal, Typography } from "antd";
 import { forwardRef, useImperativeHandle, useState } from "react";
-import { ChecklistFileStatus } from "../../my-assignations/details/components/UploadedFilesMetaCard";
-import { useUpdateAssignationFileStatusMutation } from "../queries";
+import { useAdminAssignationFilesMutation } from "../queries";
 
 type AssignationFileRejectModalProps = {};
 
@@ -30,7 +29,7 @@ export const AssignationFileRejectModal = forwardRef<
   const [uploadedAssignationFileId, setUploadedAssignationFileId] = useState(0);
   const [checklistName, setChecklistName] = useState("");
 
-  const { mutateAsync, isPending } = useUpdateAssignationFileStatusMutation(assignationId);
+  const { rejectFileMutation: { mutateAsync, isPending } } = useAdminAssignationFilesMutation(assignationId);
 
   useImperativeHandle(ref, () => ({
     open: (params: OpenModalParams) => {
@@ -57,12 +56,9 @@ export const AssignationFileRejectModal = forwardRef<
     const data = await form.validateFields();
 
     await mutateAsync({
-      data: {
-        assignationUploadedFileStatusId: ChecklistFileStatus.REJECTED,
-        comment: data.reason,
-      },
-      id: uploadedAssignationFileId,
-    });
+      comment: data.reason,
+      uploadedFileId: uploadedAssignationFileId,
+    })
 
     handleCancel();
   };

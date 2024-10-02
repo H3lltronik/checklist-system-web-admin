@@ -75,14 +75,14 @@ export const AssignationForm = forwardRef<AssignationFormHandle, Props>((_props,
                     endpoint: "/api/enterprise",
                     initialFetch: {
                       endpoint: `/api/enterprise?id=${enterpriseIdWatch}`,
-                      queryKey: [QueryKeys.FILE_CHECKLIST_LIST, enterpriseIdWatch],
+                      queryKey: [QueryKeys.ENTERPRISE_LIST, enterpriseIdWatch],
                       enabled: enterpriseIdWatch !== undefined,
                     },
                     searchParams: {
                       limit: 2,
                     },
                     searchParamName: "search",
-                    queryKey: [QueryKeys.FILE_CHECKLIST_LIST, "search"],
+                    queryKey: [QueryKeys.ENTERPRISE_LIST, "search"],
                   }
                 }}
               />

@@ -1,6 +1,6 @@
-import { ParsedChecklistItem } from "@/@types/common";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { Card, Progress, Spin } from "antd";
+import { CHECKLIST_ITEM_EVENT, ChecklistItem } from "../types";
 import { AdminUploadedFilesMetaCard } from "./components/AdminUploadedFilesMetaCard";
 import { DescriptionMetaCard } from "./components/DescriptionMetaCard";
 import { FormatsMetaCard } from "./components/FormatsMetaCard";
@@ -9,14 +9,13 @@ import { MaxSizeMetaCard } from "./components/MaxSizeMetaCard";
 
 type AdminChecklistItemDetailsProps = {
   assignationId: number;
-} & ParsedChecklistItem;
+} & ChecklistItem;
 
 export const AdminChecklistItemDetails = (props: AdminChecklistItemDetailsProps) => {
-  const hasRejected = (props.rejectedFiles?.length ?? 0) > 0;
-  const progress =
-    (((props.acceptedFiles?.length ?? 0) + (props.pendingFiles?.length ?? 0)) /
-      (props.maxFiles ?? 1)) *
-    100;
+  const hasRejected = props.uploadedFiles.some((item) => item.status.event === CHECKLIST_ITEM_EVENT.ADMIN_REJECTED_FILE);
+  const pendingFiles = props.uploadedFiles.filter((item) => item.status.event === CHECKLIST_ITEM_EVENT.USER_UPLOADED_FILE);
+  const acceptedFiles = props.uploadedFiles.filter((item) => item.status.event === CHECKLIST_ITEM_EVENT.ADMIN_ACCEPTED_FILE);
+  const progress = props.progress;
 
   return (
     <Card className="w-full max-w-[350px] relative rounded-md overflow-hidden">
@@ -31,7 +30,7 @@ export const AdminChecklistItemDetails = (props: AdminChecklistItemDetailsProps)
         title={props.title}
         avatar={
           <>
-            {(props.pendingFiles?.length ?? 0) + (props.acceptedFiles?.length ?? 0) <=
+            {(pendingFiles?.length ?? 0) + (acceptedFiles?.length ?? 0) <=
               (props.maxFiles ?? 1) &&
               !hasRejected && <Progress type="circle" percent={progress} size="small" />}
             {hasRejected && <CloseCircleOutlined className="text-red-500 text-5xl" />}
@@ -39,10 +38,10 @@ export const AdminChecklistItemDetails = (props: AdminChecklistItemDetailsProps)
         }
       />
 
-      {(props.pendingFiles?.length ?? 0) + (props.acceptedFiles?.length ?? 0) <=
+      {(pendingFiles?.length ?? 0) + (acceptedFiles?.length ?? 0) <=
         (props.maxFiles ?? 1) && (
         <p className="text-center text-xs text-gray-400">
-          {props.pendingFiles?.length ?? 0} archivo(s) subidos
+          {pendingFiles?.length ?? 0} archivo(s) subidos
         </p>
       )}
 

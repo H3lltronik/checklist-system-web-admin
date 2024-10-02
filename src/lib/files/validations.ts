@@ -1,5 +1,3 @@
-import { Assignation } from "@/@types/api/entities";
-import { ParsedChecklistItem } from "@/@types/common";
 import { SizeSuffix } from "@/@types/sizes";
 import { bytesToSize, bytesWithSuffix } from "@/components/screens/my-assignations/details/lib";
 import { notification } from "antd";
@@ -16,14 +14,9 @@ type FileRulesToValidate = {
 
 export const buildAssignationFileValidation = (
   params: FileRulesToValidate,
-  assignation: Assignation,
-  checklistItem: ParsedChecklistItem,
+  filesLength: number,
 ) => {
   return (file: RcFile) => {
-    const filesLength =
-      assignation.files?.filter((f) => f.checklistItemId == checklistItem.id && f.deletedAt == null)
-        .length ?? 0;
-
     if (filesLength >= (params.maxFiles ?? 1)) {
       notification.info({
         message: "Se ha alcanzado el limite de archivos",
@@ -51,7 +44,7 @@ export const buildAssignationFileValidation = (
     if (!isLt2M) {
       notification.info({
         message: "Archivo muy pesado",
-        description: `El archivo debe ser menor a ${maxSize} ${params.sizeSuffix}, el proporcionado es ${bytesToSize(file.size)}`,
+        description: `El archivo debe ser menor a ${bytesToSize(maxSize ?? 0)}, el proporcionado es ${bytesToSize(file.size)}`,
       });
     }
     return isLt2M ? true : Upload.LIST_IGNORE;

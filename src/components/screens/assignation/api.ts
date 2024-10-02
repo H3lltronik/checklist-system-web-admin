@@ -66,6 +66,44 @@ export const deleteAssignation = async (id: number) => {
   return result.data;
 };
 
+// @Patch(":assignationId/accept-uploaded-file/:uploadedFileId")
+// @Patch(":assignationId/reject-uploaded-file/:uploadedFileId")
+type AcceptUploadedFile = {
+  assignationId: number;
+  uploadedFileId: number;
+  comment: string;
+}
+export const acceptUploadedFile = async (params: AcceptUploadedFile) => {
+  const result = await httpRequest({
+    url: `/api/assignation/${params.assignationId}/accept-uploaded-file/${params.uploadedFileId}`,
+    method: "PATCH",
+    body: JSON.stringify({
+      comment: params.comment
+    })
+  });
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
+};
+
+export type RejectUploadedFile = {
+  assignationId: number;
+  uploadedFileId: number;
+  comment: string;
+}
+export const rejectUploadedFile = async (params: RejectUploadedFile) => {
+  const result = await httpRequest({
+    url: `/api/assignation/${params.assignationId}/reject-uploaded-file/${params.uploadedFileId}`,
+    method: "PATCH",
+    body: JSON.stringify({
+      comment: params.comment
+    }),
+  });
+
+  if (result.error) throw new Error(result.errorMessage);
+  return result.data;
+};
+
 export interface AssignationPayload {
   name: string;
   description: string;

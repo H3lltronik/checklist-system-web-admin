@@ -1,28 +1,20 @@
-import { Assignation } from "@/@types/api/entities";
 import { WarningOutlined } from "@ant-design/icons";
 import { Progress } from "antd";
+import { Assignation, CHECKLIST_ITEM_EVENT } from "../types";
 import { ChecklistItemDetails } from "./ChecklistItemDetails";
-import { ChecklistFileStatus } from "./components/UploadedFilesMetaCard";
-import { parseChecklistItems } from "./lib";
 
 type MyAssignationDetailsScreenProps = {
   data: Assignation;
 };
 
 export const MyAssignationDetailsScreen = (props: MyAssignationDetailsScreenProps) => {
-  // const filesLength = props.data.files?.length ?? 0;
-  const checklistIds = props.data.files?.map((file) => file.checklistItemId);
-  const uniqueChecklistIds = [...new Set(checklistIds)];
-  const filesLength = uniqueChecklistIds.length;
-
-  const checklistItemsLength =
-    props.data.fileChecklist?.checklistItems?.map(() => 1).reduce((a, b) => a + b, 0) ?? 0;
-
-  const completedPercentage = Math.round((filesLength / checklistItemsLength) * 100);
-  const checklistItems = parseChecklistItems(props.data);
-  const hasOneRejected = props.data.files?.some(
-    (uploadedFile) => uploadedFile.assignationUploadedFileStatusId === ChecklistFileStatus.REJECTED,
+  const hasOneRejected = props.data.checklistItems.some((item) =>
+    item.uploadedFiles.some(
+      (file) => file.status?.event === CHECKLIST_ITEM_EVENT.ADMIN_REJECTED_FILE,
+    ),
   );
+  const completedPercentage = props.data.progress;
+  const checklistItems = props.data.checklistItems;
 
   return (
     <div>

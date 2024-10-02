@@ -3,14 +3,15 @@ import { queryClient } from "@/components/core/queryClient";
 import { QueryKey, queryOptions, useMutation } from "@tanstack/react-query";
 import { notification } from "antd";
 import {
+  acceptUploadedFile,
   createAssignation,
   deleteAssignation,
   EditAssignationPayload,
   getAssignationDetails,
   getAssignationList,
-  updateAssignation,
-  updateAssignationFileStatus,
-  UpdateAssignationFileStatusPayload,
+  RejectUploadedFile,
+  rejectUploadedFile,
+  updateAssignation
 } from "./api";
 
 export const assignationQueryOptions = queryOptions({
@@ -31,13 +32,16 @@ export const buildAssignationDetailsQueryOptions = (id: number) =>
 
       return {
         ...data,
-        files: data.files.map((file) => ({
-          ...file,
-          uploadedFile: {
-            ...file.uploadedFile,
-            url: `/api/files/${file.uploadedFile.slug}`,
-          },
-        })),
+        // checklistItems: data.checklistItems.map((item) => ({
+        //   ...item,
+        //   uploadedFiles: item.uploadedFiles.map((file) => ({
+        //     ...file,
+        //     upload: {
+        //       ...file.upload,
+        //       url: `/api/files/${file.upload.slug}`,
+        //     }
+        //   })),
+        // }))
       };
     },
   });
@@ -83,25 +87,33 @@ export const useUpdateAssignationMutation = () => {
   });
 };
 
-export const useUpdateAssignationFileStatusMutation = (assignationId: number) => {
-  return useMutation({
-    mutationFn: (variables: { id: number; data: UpdateAssignationFileStatusPayload }) =>
-      updateAssignationFileStatus(variables.id, variables.data),
+export const useAdminAssignationFilesMutation = (assignationId: number) => {
+  const acceptFileMutation = useMutation({
+    mutationFn: (uploadedFileId: number) => acceptUploadedFile({ uploadedFileId, assignationId, comment: 'Archivo aceptado por usuario' }),
     onSuccess: () => {
-      notification.success({
-        message: "Status del archivo actualizado correctamente",
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: [QueryKeys.ASSIGNATION_LIST, assignationId],
-      });
+      notification.success({ message: "Archivo aceptado correctamente" });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.ASSIGNATION_LIST, assignationId] });
     },
     onError: () => {
-      notification.error({
-        message: "Ocurrio un error",
-      });
+      notification.error({ message: "Ocurrio un error" });
     },
   });
+
+  const rejectFileMutation = useMutation({
+    mutationFn: (variables: Omit<RejectUploadedFile, 'assignationId'>) => rejectUploadedFile({ ...variables, assignationId }),
+    onSuccess: () => {
+      notification.success({ message: "Archivo rechazado correctamente" });
+      queryClient.invalidateQueries({ queryKey: [QueryKeys.ASSIGNATION_LIST, assignationId] });
+    },
+    onError: () => {
+      notification.error({ message: "Ocurrio un error" });
+    },
+  })
+
+  return {
+    acceptFileMutation,
+    rejectFileMutation
+  }
 };
 
 export const useDeleteAssignationMutation = () => {

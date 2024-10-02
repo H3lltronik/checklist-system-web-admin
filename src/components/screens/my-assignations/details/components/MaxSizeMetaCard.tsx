@@ -1,10 +1,11 @@
-import { ParsedChecklistItem } from "@/@types/common";
+import { SizeSuffix } from "@/@types/sizes";
 import { Card } from "antd";
+import { ChecklistItem } from "../../types";
 import { bytesToSize, bytesWithSuffix } from "../lib";
 
-export const MaxSizeMetaCard = ({ item }: { item: ParsedChecklistItem }) => {
+export const MaxSizeMetaCard = ({ item }: { item: ChecklistItem }) => {
 
-  const sizeInBytes = bytesWithSuffix(item.maxSize, item.sizeSuffix) || 0;
+  const sizeInBytes = bytesWithSuffix(item.maxSize, item.sizeSuffix as SizeSuffix) || 0;
 
   return (
     <>

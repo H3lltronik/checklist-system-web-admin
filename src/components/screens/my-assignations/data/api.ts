@@ -1,8 +1,9 @@
 import {
-  GetAssignationResponse,
   GetEnterpriseAssignationListResponse,
+  GetEnterpriseAssignationResponse,
 } from "@/@types/api/assignation";
 import { httpRequest } from "@/http/http-client";
+import { ChecklistType } from "../types";
 
 export const getEnterpriseAssignations = async () => {
   const result = await httpRequest<GetEnterpriseAssignationListResponse>({
@@ -14,7 +15,7 @@ export const getEnterpriseAssignations = async () => {
 };
 
 export const getEnterpriseAssignationsDetails = async (assignationId: number) => {
-  const result = await httpRequest<GetAssignationResponse>({
+  const result = await httpRequest<GetEnterpriseAssignationResponse>({
     url: `/api/my-assignations/${assignationId}`,
     method: "GET",
   });
@@ -26,6 +27,7 @@ export type AddFileAssignation = {
   assignationId: number;
   uploadedFileId: number;
   checklistItemId: number;
+  checklistItemType: ChecklistType;
 };
 
 export const addFilesToAssignation = async (params: { files: AddFileAssignation[] }) => {

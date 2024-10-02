@@ -1,6 +1,6 @@
 import { queryClient } from "@/components/core/queryClient";
 import { AssignationDetailsScreen } from "@/components/screens/assignation/AssignationDetailsScreen";
-import { buildAssignationDetailsQueryOptions } from "@/components/screens/assignation/queries";
+import { buildEnterpriseAssignationDetailsQueryOptions } from "@/components/screens/my-assignations/data/queries";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -8,7 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 const loader = async (params) => {
   if (!params.id) return null;
   const data = await queryClient.ensureQueryData(
-    buildAssignationDetailsQueryOptions(Number(params.id)),
+    buildEnterpriseAssignationDetailsQueryOptions(Number(params.id)),
   );
   return data;
 };
@@ -21,7 +21,7 @@ export const Route = createFileRoute("/admin/assignations/$id")({
 
 function AdminAssignationDetailsScreen() {
   const { id } = Route.useParams();
-  const { data } = useSuspenseQuery(buildAssignationDetailsQueryOptions(Number(id)));
+  const { data } = useSuspenseQuery(buildEnterpriseAssignationDetailsQueryOptions(Number(id)));
 
   if (!data) return <>No data</>;
 

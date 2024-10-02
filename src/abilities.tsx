@@ -64,7 +64,7 @@ export const createAbilityForUser = (user?: UserPermissions): AppAbility => {
 
   const builder = new AbilityBuilder<AppAbility>(createMongoAbility);
 
-  user.permissions.forEach((permission) => {
+  user.permissions?.forEach((permission) => {
     const [subject, action] = permission.split("||");
 
     if (subject === Subjects.ScreenAll && action === Action.Manage) {

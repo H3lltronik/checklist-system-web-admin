@@ -1,7 +1,7 @@
-import { ParsedChecklistItem } from "@/@types/common";
 import { Card } from "antd";
+import { ChecklistItem } from "../../types";
 
-export const DescriptionMetaCard = ({ item }: { item: ParsedChecklistItem }) => {
+export const DescriptionMetaCard = ({ item }: { item: ChecklistItem }) => {
   return (
     <>
       {item.description && (

@@ -1,9 +1,9 @@
 import { FileUploadedResponse } from "@/@types/api/assignation";
-import { ParsedChecklistItem } from "@/@types/common";
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { Card, Progress } from "antd";
 import { useAddFilesToAssignationMutation } from "../data/queries";
+import { CHECKLIST_ITEM_EVENT, ChecklistItem } from "../types";
 import { DescriptionMetaCard } from "./components/DescriptionMetaCard";
 import { FormatsMetaCard } from "./components/FormatsMetaCard";
 import { MaxFilesMetaCard } from "./components/MaxFilesMetaCard";
@@ -13,7 +13,7 @@ import { UploadSection } from "./components/UploadSection";
 
 type ChecklistItemDetailsProps = {
   assignationId: number;
-} & ParsedChecklistItem;
+} & ChecklistItem;
 
 export const ChecklistItemDetails = (props: ChecklistItemDetailsProps) => {
   const { mutateAsync, isPending } = useAddFilesToAssignationMutation(props.assignationId);
@@ -27,11 +27,12 @@ export const ChecklistItemDetails = (props: ChecklistItemDetailsProps) => {
         assignationId: props.assignationId,
         uploadedFileId: response.id,
         checklistItemId: checklistItemId,
+        checklistItemType: props.checklistItemType
       })),
     });
   };
 
-  const hasRejected = (props.rejectedFiles?.length ?? 0) > 0;
+  const hasRejected = props.uploadedFiles.some((item) => item.status.event === CHECKLIST_ITEM_EVENT.ADMIN_REJECTED_FILE);
 
   return (
     <Card className="w-full max-w-[350px] relative rounded-md overflow-hidden">
@@ -42,16 +43,10 @@ export const ChecklistItemDetails = (props: ChecklistItemDetailsProps) => {
         title={props.title}
         avatar={
           <>
-            {(props.uploadedFiles?.length ?? 0) == (props.maxFiles ?? 1) && !hasRejected && (
-              <CheckCircleOutlined className="text-green-500 text-3xl" />
-            )}
-            {(props.uploadedFiles?.length ?? 0) < (props.maxFiles ?? 1) && (
-              <Progress
-                type="circle"
-                percent={((props.uploadedFiles?.length ?? 0) / 1) * 100}
-                size="small"
-              />
-            )}
+            {
+              props.progress < 100 ? <Progress type="circle" percent={props.progress} size="small" />
+              : <CheckCircleOutlined className="text-green-500 text-5xl" />
+            }
 
             {hasRejected && <CloseCircleOutlined className="text-red-500 text-3xl" />}
           </>

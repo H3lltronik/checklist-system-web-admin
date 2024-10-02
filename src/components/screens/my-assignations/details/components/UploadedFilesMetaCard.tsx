@@ -1,18 +1,17 @@
-import { AssignationUploadedFile } from "@/@types/api/entities";
-import { ParsedChecklistItem } from "@/@types/common";
 import { AbsoluteCenteredLoader } from "@/components/core/AbsoluteCenteredLoader";
 import { DownloadFileButton } from "@/components/core/DownloadFileButton";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm } from "antd";
 import dayjs from "dayjs";
 import { useRemoveFileToAssignationMutation } from "../../data/queries";
+import { CHECKLIST_ITEM_EVENT, ChecklistItem, UploadedFile } from "../../types";
 import { bytesToSize } from "../lib";
 
 dayjs.locale("es");
 
 type UploadedFilesMetaCardProps = {
   assignationId: number;
-  item: ParsedChecklistItem;
+  item: ChecklistItem;
 };
 
 export enum ChecklistFileStatus {
@@ -23,35 +22,43 @@ export enum ChecklistFileStatus {
 export const UploadedFilesMetaCard = (props: UploadedFilesMetaCardProps) => {
   const { mutateAsync, isPending } = useRemoveFileToAssignationMutation(props.assignationId);
 
-  const handleRemove = async (uploadedFile: AssignationUploadedFile) => {
+  const handleRemove = async (uploadedFile: UploadedFile) => {
     mutateAsync({ assignationUploadedFileId: uploadedFile.id });
   };
 
-  const fileAccepted = (file: AssignationUploadedFile) =>
-    file.assignationUploadedFileStatusId === ChecklistFileStatus.ACCEPTED;
+  const fileAccepted = (file: UploadedFile) =>
+    file.status.event === CHECKLIST_ITEM_EVENT.ADMIN_ACCEPTED_FILE;
 
-  const fileRejected = (file: AssignationUploadedFile) =>
-    file.assignationUploadedFileStatusId === ChecklistFileStatus.REJECTED;
+  const fileRejected = (file: UploadedFile) =>
+    file.status.event === CHECKLIST_ITEM_EVENT.ADMIN_REJECTED_FILE;
 
-  // const filePending = (file: AssignationUploadedFile) =>
-  //   file.assignationUploadedFileStatusId === null ||
-  //   file.assignationUploadedFileStatusId === undefined;
+  const nonDeletedFiles = props.item?.uploadedFiles?.filter(
+    (item) =>
+      item.status.event !== CHECKLIST_ITEM_EVENT.USER_REMOVED_FILE &&
+      item.status.event !== CHECKLIST_ITEM_EVENT.ADMIN_REMOVED_FILE,
+  );
 
   return (
     <>
-      {props.item.uploadedFiles && (
+      {nonDeletedFiles && (
         <div className="mt-5 flex flex-col gap-2 relative">
           <AbsoluteCenteredLoader isLoading={isPending} />
 
-          {props.item.uploadedFiles.map((file) => (
+          {nonDeletedFiles.map((file) => (
             <div
               className={`border border-gray-300 border-dashed p-1 relative overflow-hidden ${fileRejected(file) && "bg-red-500 bg-opacity-20 border-yellow-500"}
                ${fileAccepted(file) && "bg-green-500 bg-opacity-10 border-green-500"}`}
             >
-              <DownloadFileButton file={file.uploadedFile} />
-              <p>{bytesToSize(file.uploadedFile.size)}</p>
+              <DownloadFileButton
+                file={{
+                  mimetype: file.upload.mimeType,
+                  name: file.upload.name,
+                  slug: file.upload.slug,
+                }}
+              />
+              <p>{bytesToSize(file.upload.size)}</p>
               <p className="capitalize">
-                Subido: {dayjs(file.uploadedFile.createdAt).format("dddd DD/MM/YYYY")}
+                Subido: {dayjs(file.upload.createdAt).format("dddd DD/MM/YYYY")}
               </p>
 
               {file.comment && fileRejected(file) && (
@@ -71,7 +78,7 @@ export const UploadedFilesMetaCard = (props: UploadedFilesMetaCardProps) => {
                   title="Borrar archivo?"
                   description="¿Estas seguro de borrar este archivo?"
                   onConfirm={() => handleRemove(file)}
-                  onCancel={() => {}}
+                  onCancel={() => { }}
                   okText="Si"
                   cancelText="No"
                 >
